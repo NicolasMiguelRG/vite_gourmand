@@ -28,9 +28,9 @@ Champs personnalisés :
 
 Automatisations :
 - une issue ajoutée au projet arrive dans le Backlog ;
-- l'ouverture d'une pull request liée à une issue fait passer la carte en En test ;
-- la fusion de la pull request ou la fermeture de l'issue fait passer la carte en Terminé ;
-- une carte déplacée en Terminé ferme automatiquement son issue .
+- l'ouverture d'une pull request liée à une issue (mot-clé « Closes #X ») fait passer la carte en En test ;
+- la fusion de la pull request dans `dev` ferme l'issue et fait passer la carte en Terminé ;
+- une carte déplacée manuellement en Terminé ferme automatiquement son issue.
 
 ## Jalons 
 
@@ -61,10 +61,14 @@ Une carte passe en Terminé lorsque :
 
 ## Workflow Git
 
+- `dev` : branche par défaut du dépôt, branche d'intégration du code en cours de construction et à tester
 - `main` : code stable, prêt au déploiement, protégé (aucun envoi direct, fusion uniquement par pull request)
-- `dev` : branche d'intégration du code en cours de construction et à tester 
 - une branche par fonctionnalité, créée depuis `dev`, puis fusionnée dans `dev` après test
 - `dev` est fusionnée dans `main` une fois testée
+
+`dev` est la branche par défaut car c'est sur elle qu'arrive tout le travail :
+les mots-clés de liaison (« Closes #X ») ne fonctionnent que pour une pull request
+qui cible la branche par défaut.
 
 Convention de nommage des branches : 
 - `feature/...` : fonctionnalité
