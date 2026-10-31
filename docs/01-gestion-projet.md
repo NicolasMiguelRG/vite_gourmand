@@ -65,6 +65,7 @@ Une carte passe en Terminé lorsque :
 - `main` : code stable, prêt au déploiement, protégé (aucun envoi direct, fusion uniquement par pull request)
 - une branche par fonctionnalité, créée depuis `dev`, puis fusionnée dans `dev` après test
 - `dev` est fusionnée dans `main` une fois testée
+- chaque fusion de `dev` vers `main` donne lieu à une release GitHub versionnée (v0.1, v0.2...), qui liste les pull requests incluses et consitue l'historique des mises en production
 
 `dev` est la branche par défaut car c'est sur elle qu'arrive tout le travail :
 les mots-clés de liaison (« Closes #X ») ne fonctionnent que pour une pull request
