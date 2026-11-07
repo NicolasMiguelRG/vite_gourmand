@@ -4,7 +4,7 @@ left to right direction
 actor Utilisateur
 actor Visiteur
 actor "Service d'envoi de mails" as Mail 
-note "Hérite de tous les cas d'utilisation\nde l'espace public" as N1
+note "Cas d'utilisation détaillés dans\nle diagramme de l'espace public" as N1
 
 rectangle "Vite & Gourmand - Espace Utilisateur" {
     usecase "Commander un menu" as UC1
@@ -31,7 +31,7 @@ Utilisateur --> UC4
 Utilisateur --> UC5
 Utilisateur --> UC6
 Utilisateur --> UC7
-UC1 --> Mail
+UC1 --> Mail : confirmation de commande
 
 
 Utilisateur --|> Visiteur
