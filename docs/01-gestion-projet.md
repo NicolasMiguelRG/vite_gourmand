@@ -34,7 +34,7 @@ Automatisations :
 - une carte déplacée manuellement en Terminé ferme automatiquement son issue.
 
 
-![Historique complet de l'issue #4](images/gestion-projet-cycle-complet-issue-4.png)
+![Historique complet de l'issue #4](images/gestion-projet/gestion-projet-cycle-complet-issue-4.png)
 
 *Historique de l'issue #4 : passage automatique en En test à l'ouverture de la pull request #7, puis fermeture et passage en Terminé à sa fusion.*
 
@@ -78,7 +78,7 @@ Une carte passe en Terminé lorsque :
 les mots-clés de liaison (« Closes #X ») ne fonctionnent que pour une pull request
 qui cible la branche par défaut.
 
-![Protection de la branche main](images/gestion-projet-protection-main.png)
+![Protection de la branche main](images/gestion-projet/gestion-projet-protection-main.png)
 
 *Tentative de modification directe de `main` : GitHub impose de passer par une nouvelle branche et une pull request.*
 
