@@ -66,10 +66,28 @@ l'administrateur peut le faire aussi.
 ### Espace utilisateur
 
 #### Commande d'un menu
+- Accessible depuis le bouton « Commander » de la vue détaillée d'un menu
+- Nom, prénom, adresse mail et numéro de GSM préremplis à partir du compte
+- Informations de la prestation : adresse, date, heure de livraison souhaitée et lieu 
+- Menu déjà sélectionné si l'utilisateur vient de la vue détaillée, sinon à choisir
+- Choix du nombre de personnes, avec mise à jour du prix et respect du minimum imposé par le menu
+- Calcul des frais de livraison selon l'adresse de la prestation 
+- Application d'une réduction selon le nombre de personnes
+- Récapitulatif détaillé du prix avant validation (prix du menu et prix de la livraison)
+- Envoi d'un mail de confirmation après la commande
 
 #### Suivi et gestion des commandes
+- Consultation du détail de toutes ses commandes
+- Modification ou annulation d'une commande tant qu'elle n'a pas été acceptée par un employé ; tout est modifiable sauf le menu choisi
+- Après acceptation : accès au suivi de la commande, qui liste tous ses statuts avec la date et l'heure de chaque changement
 
 #### Avis
+- Notification par mail quand la commande est terminée, invitant l'utilisateur à donner son avis
+- Avis donné depuis la commande : une note de 1 à 5 et un commentaire 
+- Avis affiché sur la page d'accueil uniquement après validation par un employé ou l'administrateur
+
+#### Informations personnelles
+- Modification de ses informations personnelles
 
 ### Espace employé
 
