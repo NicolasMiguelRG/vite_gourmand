@@ -28,12 +28,12 @@ Visiteur --> UC9
 Visiteur --> UC10
 Visiteur --> UC11
 
-UC4 .> UC3 : <<extend>>
-UC8 .> UC7 : <<extend>>
+UC3 <.. UC4 : <<extend>>
+UC7 <.. UC8 : <<extend>>
 
-UC6 --> Mail
-UC8 --> Mail
-UC9 --> Mail
+UC6 --> Mail : mail de bienvenue
+UC8 --> Mail : lien de reinitialisation
+UC9 --> Mail : demande transmise à l'entreprise
 
 @enduml
 
