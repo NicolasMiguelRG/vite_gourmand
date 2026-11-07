@@ -1,0 +1,39 @@
+@startuml cas-utilisation-public 
+left to right direction 
+
+actor Visiteur
+actor "Service d'envoi de mails" as Mail 
+
+rectangle "Vite & Gourmand - Espace public" {
+    usecase "Découvir l'entreprise" as UC1
+    usecase "Consulter les avis clients" as UC2
+    usecase "Consulter les menus" as UC3
+    usecase "Filtrer les menus" as UC4
+    usecase "Consulter le détail d'un menu" as UC5
+    usecase "Créer un compte" as UC6
+    usecase "Se connecter" as UC7
+    usecase "Réinitialiser son mot de passe" as UC8
+    usecase "Contacter l'entreprise" as UC9
+    usecase "Consulter les horaires" as UC10
+    usecase "Consulter les mentions légales et les CGV" as UC11
+}
+
+Visiteur --> UC1
+Visiteur --> UC2
+Visiteur --> UC3
+Visiteur --> UC5
+Visiteur --> UC6
+Visiteur --> UC7
+Visiteur --> UC9
+Visiteur --> UC10
+Visiteur --> UC11
+
+UC4 .> UC3 : <<extend>>
+UC8 .> UC7 : <<extend>>
+
+UC6 --> Mail
+UC8 --> Mail
+UC9 --> Mail
+
+@enduml
+
