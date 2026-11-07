@@ -92,16 +92,32 @@ l'administrateur peut le faire aussi.
 ### Espace employé
 
 #### Gestion des menus, plats et horaires
+- Création, modification et suppression des menus
+- Création, modification et suppression des plats, avec leurs allergènes
+- Modification des horaires affichés dans le pied de page
 
 #### Gestion des commandes
+- Filtre des commandes par statut ou par client, pour retrouver rapidement les commandes à traiter
+- Mise à jour du statut des commandes : accepté, en préparation, en cours de livraison, livré, en attente du retour de matériel, terminée
+- Envoi automatique d'un mail au client lorsque la commande passe « en attente du retour de matériel », pour lui rappeler les conditions de restitution
+- Modification ou annulation d'une commande uniquement après avoir contacté le client (appel GSM ou mail), avec saisie du mode de contact et du motif
 
 #### Modération des avis
+- Validation ou refus des avis laissés par les utilisateurs
+- Seuls les avis validés sont affichés sur la page d'accueil
 
 ### Espace administrateur
+L'administrateur dispose de toutes les fonctionnalités de l'espace employé, ainsi que des suivantes.
 
 #### Gestion des comptes employés
+- Création d'un compte employé avec une adresse mail (identifiant) et un mot de passe
+- Envoi automatique d'un mail à l'employé pour l'informer de la création de son compte, sans communiquer le mot de passe
+- Désactivation d'un compte employé, par exemple en cas de départ de l'entreprise
+- Aucune création de compte administrateur possible depuis l'application
 
 #### Statistiques
+- Nombre de commandes par menu, avec un graphique pour comparer les menus entre eux (données issues de la base non relationnelle)
+- Calcul du chiffre d'affaires par menu, avec un filtre par menu et un filtre sur une période
 
 ## Règles de gestion
 
