@@ -105,6 +105,9 @@ l'administrateur peut le faire aussi.
 
 ### Espace employé
 
+### Compte 
+- Remplacement obligatoire du mot de passe provisoire par un mot de passe personnel à la première connexion (RG-10 bis)
+
 #### Gestion des menus, plats et horaires
 
 - Création, modification et suppression des menus

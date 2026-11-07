@@ -1,0 +1,40 @@
+@startuml cas-utilisation-utilisateur 
+left to right direction
+
+actor Utilisateur
+actor Visiteur
+actor "Service d'envoi de mails" as Mail 
+note "Cas d'utilisation détaillés dans\nle diagramme de l'espace public" as N1
+
+rectangle "Vite & Gourmand - Espace Utilisateur" {
+    usecase "Commander un menu" as UC1
+    usecase "Consulter ses commandes" as UC2
+    usecase "Modifier une commande" as UC3
+    usecase "Annuler une commande" as UC4
+    usecase "Suivre une commande" as UC5
+    usecase "Donner un avis" as UC6
+    usecase "Modifier ses informations personnelles" as UC7
+}
+
+note right of UC1 : Précondition : être authentifié
+note right of UC3 : Précondition : statut « en attente » \nRègle : le menu n'est pas modifiable
+note right of UC4 : Précondition : statut « en attente »
+note right of UC5 : Précondition : commande acceptée
+note right of UC6 : Précondition : commande terminée \nRègle : un seul avis par commande
+
+
+N1 .. Visiteur
+Utilisateur --> UC1
+Utilisateur --> UC2
+Utilisateur --> UC3
+Utilisateur --> UC4
+Utilisateur --> UC5
+Utilisateur --> UC6
+Utilisateur --> UC7
+UC1 --> Mail : confirmation de commande
+
+
+Utilisateur --|> Visiteur
+
+@enduml
+

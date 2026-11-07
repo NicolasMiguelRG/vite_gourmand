@@ -1,0 +1,48 @@
+@startuml cas-utilisation-employe
+left to right direction
+
+actor Employé
+actor Visiteur
+actor "Service d'envoi de mails" as Mail
+note "Cas d'utilisation détaillés dans\nle diagramme de l'espace public" as N1
+
+rectangle "Vite & Gourmand - Espace Employé" {
+    usecase "Se connecter" as UC1
+    usecase "Changer son mot de passe provisoire" as UC2
+    usecase "Gérer les menus" as UC3
+    usecase "Gérer les plats" as UC4
+    usecase "Modifier les horaires" as UC5
+    usecase "Consulter les commandes" as UC6
+    usecase "Filtrer les commandes" as UC7
+    usecase "Mettre à jour le statut d'une commande" as UC8 
+    usecase "Modifier la commande d'un client" as UC9
+    usecase "Saisir le mode de contact et le motif" as UC11
+    usecase "Annuler la commande d'un client" as UC10
+    usecase "Modérer les avis" as UC12
+}
+
+note right of UC2 : Condition : première connexion (RG-10 bis)
+
+
+N1 .. Visiteur
+Employé --> UC1
+Employé --> UC3
+Employé --> UC4
+Employé --> UC5
+Employé --> UC6
+Employé --> UC8
+Employé --> UC9
+Employé --> UC10
+Employé --> UC12
+UC8 --> Mail : retour de matériel (RG-24)\ninvitation à donner un avis (RG-25)
+
+
+UC1 <.. UC2 : <<extend>>
+UC6 <.. UC7 : <<extend>>
+UC9 ..> UC11 : <<include>>
+UC10 ..> UC11 : <<include>>
+
+
+Employé --|> Visiteur
+
+@enduml

@@ -1,0 +1,33 @@
+@startuml cas-utilisation-administrateur
+left to right direction
+
+actor Administrateur
+actor Employé
+actor "Service d'envoi de mails" as Mail 
+note "Cas d'utilisation détaillés dans\nle diagramme de l'espace employé" as N1
+note "Aucun compte administrateur ne peut\nêtre créé depuis l'application (RG-12)" as N2
+
+rectangle "Vite & Gourmand - Espace Administrateur" {
+    usecase "Créer un compte employé" as UC1
+    usecase "Désactiver un compte employé" as UC2
+    usecase "Consulter le nombre de commandes par menu" as UC3
+    usecase "Consulter le chiffre d'affaires par menu" as UC4
+    usecase "Filtrer le chiffre d'affaires" as UC5
+}
+
+note left of UC3 : Graphique comparatif entre les menus
+note right of UC5 : Par menu et par période
+
+N1 .. Employé
+Administrateur --> UC1
+Administrateur --> UC2
+Administrateur --> UC3
+Administrateur --> UC4
+UC1 --> Mail : notification sans le mot de passe (RG-10)
+
+UC4 <.. UC5 : <<extend>>
+
+
+Administrateur --|> Employé
+
+@enduml
