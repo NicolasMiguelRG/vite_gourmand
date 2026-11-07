@@ -22,4 +22,27 @@ l'administrateur peut le faire aussi
 
 
 ## Spécifications fonctionnelles
+### Espace public (visiteur)
+#### Navigation et pied de page
+#### Page d'accueil
+#### Vue globale des menus
+#### Vue détailée d'un menu
+#### Création de compte
+#### Connexion et mot de passe oublié
+#### Contact 
+
+### Espace utilisateur
+#### Commande d'un menu
+#### Suivi et gestion des commandes
+#### Avis
+
+### Espace employé
+#### Gestion des menus, plats et horaires
+#### Gestion des commandes
+#### Modération des avis
+
+### Espace administrateur
+#### Gestion des comptes employés
+#### Statistiques
+
 ## Contraintes
