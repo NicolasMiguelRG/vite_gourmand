@@ -1,5 +1,8 @@
 # Cahier des charges
 
+Ce document est rédigé à partir de l'expression du besoin transmise par le chef de projet.
+Les numéros de page entre parenthèses renvoient à ce document.
+
 ## Résumé du projet
 
 Vite & Gourmand est une entreprise bordelaise de deux personnes, Julie et José, qui existe depuis 25 ans. Elle propose des prestations pour tout événement, comme un repas de Noël ou de Pâques, à travers des menus en constante évolution. Aujourd'hui, ces menus sont envoyés par mail aux clients habitués. Pour gagner en visibilité et toucher de nouveaux clients, Julie a eu l'idée d'une application web qui présente les menus à tous et permette de les commander en ligne. N'ayant pas de notions en informatique, Julie et José ont confié ce projet à FastDev, l'entreprise dans laquelle je suis développeur.
@@ -138,14 +141,14 @@ L'administrateur dispose de toutes les fonctionnalités de l'espace employé, ai
 
 ## Règles de gestion
 
-Les règles marquées « interprétation » ne figurent pas explicitement dans l'énoncé : ce sont des choix
-que j'ai faits lorsque l'énoncé était incomplet ou ambigu. Ils sont justifiés dans le tableau
+Les règles marquées « interprétation » ne figurent pas explicitement dans l'expression du besoin : ce sont des choix
+que j'ai faits lorsque l'expression du besoin était incomplète ou ambiguë. Ils sont justifiés dans le tableau
 « Choix d'interprétation » en fin de section.
 
 ### Menus et plats
 
 - **RG-01** : Un menu possède un thème parmi : Noël, Pâques, classique, événement (p. 4).
-- **RG-02** : Un menu possède un régime parmi : classique, végétarien, vegan, pescétarien, sans gluten, sans lactose. Les régimes sont stockés en base de données : un employé ou l'administrateur peut en ajouter (p. 4 ; ajout autorisé par l'énoncé).
+- **RG-02** : Un menu possède un régime parmi : classique, végétarien, vegan, pescétarien, sans gluten, sans lactose. Les régimes sont stockés en base de données : un employé ou l'administrateur peut en ajouter (p. 4 ; ajout autorisé par l'expression du besoin).
 - **RG-03** : Un plat est une entrée, un plat principal ou un dessert, et peut appartenir à plusieurs menus (p. 4).
 - **RG-04** : Un plat peut posséder une liste d'allergènes (p. 4).
 - **RG-05** : Le prix d'un menu est défini pour son nombre minimum de personnes (p. 4).
@@ -188,17 +191,50 @@ que j'ai faits lorsque l'énoncé était incomplet ou ambigu. Ils sont justifié
 
 ### Choix d'interprétation
 
-| Règle     | Ambiguïté de l'énoncé                                               | Choix retenu et justification                                                                                                                                                     |
+| Règle     | Ambiguïté de l'expression du besoin                                 | Choix retenu et justification                                                                                                                                                     |
 | --------- | ------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| RG-02     | L'énoncé cite trois régimes et autorise à en ajouter                | Ajout de pescétarien, sans gluten et sans lactose, régimes courants en restauration. Régimes stockés en base de données pour que l'équipe puisse en ajouter sans modifier le code |
+| RG-02     | L'expression du besoin cite trois régimes et autorise à en ajouter  | Ajout de pescétarien, sans gluten et sans lactose, régimes courants en restauration. Régimes stockés en base de données pour que l'équipe puisse en ajouter sans modifier le code |
 | RG-06     | Le fonctionnement du stock n'est pas détaillé                       | Une commande consomme une unité : c'est le sens de « il reste 5 commandes possibles »                                                                                             |
 | RG-08     | L'unicité du mail n'est pas mentionnée                              | Le mail sert d'identifiant, donc deux comptes ne peuvent pas partager le même                                                                                                     |
 | RG-10 bis | L'administrateur connaît le mot de passe de l'employé               | Changement obligatoire à la première connexion : l'exigence du client est respectée, et seul l'employé connaît son mot de passe définitif                                         |
 | RG-14     | Le calcul du prix selon le nombre de personnes n'est pas précisé    | Un prix proportionnel est le plus simple à comprendre pour le client                                                                                                              |
 | RG-15     | « 5 personnes de plus » peut se lire « exactement » ou « au moins » | « Au moins » : une remise qui disparaîtrait à 6 personnes de plus n'aurait pas de sens                                                                                            |
 | RG-16     | Le point de départ du kilométrage n'est pas indiqué                 | L'adresse de l'entreprise, d'où partent les livraisons                                                                                                                            |
-| RG-17     | Le périmètre de la réduction n'est pas précisé                      | L'énoncé lie la réduction au nombre de personnes, donc au prix du menu seulement                                                                                                  |
+| RG-17     | Le périmètre de la réduction n'est pas précisé                      | L'expression du besoin lie la réduction au nombre de personnes, donc au prix du menu seulement                                                                                    |
 | RG-19     | Aucun statut n'est nommé avant « accepté »                          | « En attente » désigne une commande reçue mais pas encore validée par l'équipe                                                                                                    |
-   | RG-26 | Le nombre d'avis par commande n'est pas limité | Un avis par commande évite les doublons et reste fidèle à « depuis la commande » |
+| RG-26     | Le nombre d'avis par commande n'est pas limité                      | Un avis par commande évite les doublons et reste fidèle à « depuis la commande »                                                                                                  |
 
 ## Contraintes
+
+### Réglementaires
+
+- **RGPD** : respect de la réglementation sur les données personnelles. Seules les données nécessaires sont collectées, et des mentions légales sont accessibles depuis le pied de page (p. 4).
+- **RGAA** : l'application doit être accessible, conformément au référentiel général d'amélioration de l'accessibilité (p. 9).
+
+### Sécurité
+
+- Respect des aspects de sécurité dans toute l'application, notamment pour la connexion et les formulaires (p. 4).
+- Mots de passe conformes à la règle RG-07.
+- Les dispositions de sécurité prises doivent être détaillées dans la documentation (p. 11).
+
+### Techniques
+
+- Utilisation obligatoire d'une base de données relationnelle et d'une base de données non relationnelle ; aucune autre technologie n'est imposée (p. 10).
+- Les statistiques de l'administrateur proviennent de la base non relationnelle (p. 9).
+- Application utilisable sur ordinateur et sur mobile : des maquettes bureau et mobile sont exigées (p. 11).
+
+### Déploiement
+
+- L'application doit être en ligne et fonctionnelle au moment de la livraison, sous peine de pénalités (p. 9).
+- La démarche et les étapes du déploiement doivent être documentées (p. 12).
+
+### Livraison et bonnes pratiques
+
+- Dépôt GitHub public, avec une branche principale, une branche de développement et une branche par fonctionnalité (p. 11).
+- Fichier `README.md` expliquant l'installation de l'application en local (p. 11).
+- Fichiers SQL de création de la base et d'insertion des données ; les fixtures et migrations ne suffisent pas (p. 11).
+- Manuel d'utilisation et charte graphique au format PDF (p. 11).
+
+### Hors périmètre
+
+- Paiement en ligne : l'expression du besoin n'en fait pas mention. La commande est validée sans paiement dans l'application ; le règlement se fait en dehors. Une évolution possible serait d'intégrer un prestataire de paiement spécialisé, pour ne jamais stocker de données bancaires.
