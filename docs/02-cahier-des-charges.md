@@ -104,28 +104,45 @@ l'administrateur peut le faire aussi.
 - Accessible depuis le bouton « Commander » de la vue détaillée d'un menu
 - Nom, prénom, adresse mail et numéro de GSM préremplis à partir du compte
 - Informations de la prestation : adresse, date, heure de livraison souhaitée et lieu
+- Adresse de la prestation sisie, ou reprise en un clic depuis l'adresse enregistrée dans le compte
+- Calendrier bloquant les dates passées et celles qui ne respectent pas le délai minimum de commande du menu
 - Menu déjà sélectionné si l'utilisateur vient de la vue détaillée, sinon à choisir
 - Choix du nombre de personnes, avec mise à jour du prix et respect du minimum imposé par le menu
-- Calcul des frais de livraison selon l'adresse de la prestation
-- Application d'une réduction selon le nombre de personnes
-- Récapitulatif détaillé du prix avant validation (prix du menu et prix de la livraison)
+- Calcul automatique des frais de livraison selon l'adresse de la prestation : si l'adresse est introuvable ou la distance incalculable, un message s'affiche et la commande ne peut pas être validée
+- Application d'une réduction selon le nombre de personnes ; la condition de réduction est indiquée pour le menu choisi, et la réduction apparaît ou disparaît dynamiquement
+- Récapitulatif détaillé du prix avant validation (prix du menu, réduction éventuelle, frais de livraison et total), mis à jour quand l'adresse ou le nombre de personnes change
+- Acceptation des CGV obligatoire pour valider la commande
+- Prix vérifié à la validation : s'il a changé, le nouveau prix est affiché et l'utilisateur doit valider à nouveau
 - Envoi d'un mail de confirmation après la commande
 
 #### Suivi et gestion des commandes
 
-- Consultation du détail de toutes ses commandes
+- Consultation du détail de toutes ses commandes, de la plus récente à la plus ancienne (date de la prestation, menu, statut, prix total), puis du détail de chacune
+- Actions proposées selon le statut : modifier ou annuler (« en attente »), suivre (à partir de « accepté »), donner un avis (« terminée », sans avis existant)
+- Accès limité à ses propres commandes
 - Modification ou annulation d'une commande tant qu'elle n'a pas été acceptée par un employé ; tout est modifiable sauf le menu choisi
-- Après acceptation : accès au suivi de la commande, qui liste tous ses statuts avec la date et l'heure de chaque changement
+- Modification : mêmes règles qu'à la commande, nouveau récapitulatif du prix à valider, puis mail récapitulatif
+- Annulation : confirmation demandée, puis message à l'écran et mail de confirmation ; la commande passe au statut « annulée » et reste visible dans la liste
+- Commande acceptée entre-temps : la modification ou l'annulation est refusée, avec un message explicatif
+- Après acceptation : accès au suivi de la commande, qui liste tous ses statuts avec la date et l'heure de chaque changement, le statut actuel étant mis en évidence
 
 #### Avis
 
-- Notification par mail quand la commande est terminée, invitant l'utilisateur à donner son avis
+- Notification par mail quand la commande est terminée, invitant l'utilisateur à donner son avis ; le lien du mail mène au formulaire d'avis, après connexion si nécessaire
+- Bouton « Donner mon avis » dans le détail d'une commande terminée, tant qu'aucun avis n'a été donée pour elle
 - Avis donné depuis la commande : une note de 1 à 5 et un commentaire
+- Note sous forme d'étoiles, utilisables au clavier et lisibles par un lecteur d'écran
+- Un seul avis par commande
+- Message informant l'utilisateur que son avis sera publié après validation
 - Avis affiché sur la page d'accueil uniquement après validation par un employé ou l'administrateur
 
 #### Informations personnelles
 
-- Modification de ses informations personnelles
+- Modification de ses informations personnelles : nom, prénom, numéro de GSM, adresse postale et adresse mail
+- Changement d'adresse mail : mot de passe actuel exigé, adresse refusée si elle est déjà utilisée, et mail d'alerte envoyé à l'ancienne adresse
+- Changement de mot de passe dans un formulaire séparé : mot de passe actuel exigé, nouveau mot de passe saisi deux fois à l'identique, puis mail informant l'utilisateur de la modification, sans le contenir
+- Informations modifiées utilisées pour préremplir les prochaines commandes, sans changer les commandes existantes
+- Message confirmant l'enregistrement des modifications
 
 ### Espace employé
 
