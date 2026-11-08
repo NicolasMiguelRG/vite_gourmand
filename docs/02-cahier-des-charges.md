@@ -48,9 +48,10 @@ l'administrateur peut le faire aussi.
 
 - Accessible aux personnes connectées comme non connectées
 - Affichage des menus publiés uniquement
-- Pour chaque menu : titre, description, nombre minimum de personnes, prix associé et bouton d'accès au détail
+- Pour chaque menu : image principale, titre, description, nombre minimum de personnes, prix associé et bouton d'accès au détail
+- Menu épuisé (stock à 0) toujours affiché, avec une mention indiquant qu'il est épuisé
 - Filtres : prix maximum, fourchette de prix, thème, régime, nombre de personnes
-- Filtre « nombre de personnes » : affiche les menus dont le nombre minimum est inférieur ou égale au nombre saisi
+- Filtre « nombre de personnes » : affiche les menus dont le nombre minimum est inférieur ou égal au nombre saisi
 - Filtres combinables, avec un bouton pour les réinitialiser
 - Mise à jour dynamique des menus affichés, sans rechargement de la page
 - Message indiquant qu'aucun menu ne correspond, si les filtres ne donnent aucun résultat
@@ -58,6 +59,7 @@ l'administrateur peut le faire aussi.
 #### Vue détaillée d'un menu
 
 - Affichage de toutes les informations du menu : titre, galerie d'images, description, thème, régime, liste des plats (entrées, plats, desserts) avec leurs allergènes, nombre minimum de personnes, prix, conditions et stock disponible
+- Photo de chaque plat, s'il en possède une
 - Conditions du menu mises en évidence, pour que le client ne puisse pas dire qu'il ne les a pas vues
 - Matériel prêté : si le menu ou l'un de ses plats en comprend, affichage de la liste du matériel et d'un rappel des conditions de restitution
 - Bouton « Commander » :
@@ -104,7 +106,7 @@ l'administrateur peut le faire aussi.
 - Accessible depuis le bouton « Commander » de la vue détaillée d'un menu
 - Nom, prénom, adresse mail et numéro de GSM préremplis à partir du compte
 - Informations de la prestation : adresse, date, heure de livraison souhaitée et lieu
-- Adresse de la prestation sisie, ou reprise en un clic depuis l'adresse enregistrée dans le compte
+- Adresse de la prestation saisie, ou reprise en un clic depuis l'adresse enregistrée dans le compte
 - Calendrier bloquant les dates passées et celles qui ne respectent pas le délai minimum de commande du menu
 - Menu déjà sélectionné si l'utilisateur vient de la vue détaillée, sinon à choisir
 - Choix du nombre de personnes, avec mise à jour du prix et respect du minimum imposé par le menu
@@ -122,6 +124,7 @@ l'administrateur peut le faire aussi.
 - Accès limité à ses propres commandes
 - Modification ou annulation d'une commande tant qu'elle n'a pas été acceptée par un employé ; tout est modifiable sauf le menu choisi
 - Modification : mêmes règles qu'à la commande, nouveau récapitulatif du prix à valider, puis mail récapitulatif
+- Modification par le client enregistrée dans l'historique de la commande, visible par l'employé
 - Annulation : confirmation demandée, puis message à l'écran et mail de confirmation ; la commande passe au statut « annulée » et reste visible dans la liste
 - Commande acceptée entre-temps : la modification ou l'annulation est refusée, avec un message explicatif
 - Après acceptation : accès au suivi de la commande, qui liste tous ses statuts avec la date et l'heure de chaque changement, le statut actuel étant mis en évidence
@@ -129,7 +132,7 @@ l'administrateur peut le faire aussi.
 #### Avis
 
 - Notification par mail quand la commande est terminée, invitant l'utilisateur à donner son avis ; le lien du mail mène au formulaire d'avis, après connexion si nécessaire
-- Bouton « Donner mon avis » dans le détail d'une commande terminée, tant qu'aucun avis n'a été donée pour elle
+- Bouton « Donner mon avis » dans le détail d'une commande terminée, tant qu'aucun avis n'a été donné pour elle
 - Avis donné depuis la commande : une note de 1 à 5 et un commentaire
 - Note sous forme d'étoiles, utilisables au clavier et lisibles par un lecteur d'écran
 - Un seul avis par commande
