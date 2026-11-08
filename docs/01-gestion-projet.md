@@ -38,6 +38,21 @@ Automatisations :
 
 *Historique de l'issue #4 : passage automatique en En test à l'ouverture de la pull request #7, puis fermeture et passage en Terminé à sa fusion.*
 
+### User stories : les cartes font référence
+
+Les fonctionnalités du jalon J4 sont décrites sous forme de user stories, une carte par story.
+Chaque carte contient la user story, ses critères d'acceptation, ses dépendances (« Dépend de : #X ») et les règles de gestion concernées.
+
+**Les cartes sont la source de vérité** : c'est la carte qui fait foi, et non une copie dans la documentation.
+Une même information écrite à deux endroits finit toujours par diverger ; en la gardant sur la carte, elle reste reliée à la branche, aux commits et à la pull request qui la réalisent.
+La documentation n'en contient qu'un tableau récapitulatif, dans le [cahier des charges](02-cahier-des-charges.md#user-stories).
+
+Pour que toutes les cartes aient la même structure, j'utilise un modèle de carte (`.github/ISSUE_TEMPLATE/user-story.md`) :
+- le titre commence par « US · », pour distinguer les user stories des autres cartes (tâches techniques, documentation) ;
+- les critères communs à toutes les user stories (affichage sur ordinateur et mobile, accessibilité, contrôles côté serveur, tests, documentation) y sont écrits une seule fois.
+
+Une vue « Table » du tableau, filtrée sur le jalon J4, affiche toutes les user stories avec leur statut, leur priorité et leur taille.
+
 
 ## Jalons 
 
