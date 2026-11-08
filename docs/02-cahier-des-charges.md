@@ -241,3 +241,56 @@ que j'ai faits lorsque l'expression du besoin était incomplète ou ambiguë. Il
 ### Hors périmètre
 
 - Paiement en ligne : l'expression du besoin n'en fait pas mention. La commande est validée sans paiement dans l'application ; le règlement se fait en dehors. Une évolution possible serait d'intégrer un prestataire de paiement spécialisé, pour ne jamais stocker de données bancaires.
+
+## User stories
+
+Les spécifications fonctionnelles ci-dessus ont été traduites en user stories, au format « En tant que… je veux… afin de… ».
+Chaque user story est une carte du tableau GitHub Projects ([Vite & Gourmand - ECF](https://github.com/users/NicolasMiguelRG/projects/2)), qui contient ses critères d'acceptation, ses dépendances et les règles de gestion concernées.
+**Les cartes font référence** : le tableau ci-dessous n'en est qu'un récapitulatif.
+
+| Carte | Espace | User story | Priorité | Taille |
+| --- | --- | --- | --- | --- |
+| #25 | Public | Découvrir l'entreprise et son équipe | P0 | S |
+| #26 | Public | Consulter les avis des clients | P0 | S |
+| #27 | Public | Consulter l'ensemble des menus | P0 | S |
+| #28 | Public | Filtrer les menus | P0 | M |
+| #29 | Public | Consulter le détail d'un menu | P0 | M |
+| #30 | Public | Créer un compte | P0 | M |
+| #31 | Public | Confirmer son adresse mail | P1 | S |
+| #32 | Public | Se connecter | P0 | M |
+| #33 | Public | Réinitialiser son mot de passe | P0 | M |
+| #34 | Public | Contacter l'entreprise | P0 | S |
+| #35 | Public | Connaître les horaires d'ouverture | P0 | S |
+| #36 | Public | Consulter les mentions légales et les CGV | P0 | S |
+| #37 | Utilisateur | Modifier ses informations personnelles | P0 | M |
+| #38 | Utilisateur | Commander un menu | P0 | M |
+| #39 | Utilisateur | Bénéficier de la réduction de groupe | P0 | S |
+| #40 | Utilisateur | Connaître le détail du prix avant validation | P0 | M |
+| #41 | Utilisateur | Consulter ses commandes | P0 | S |
+| #42 | Utilisateur | Modifier sa commande avant acceptation | P0 | M |
+| #43 | Utilisateur | Annuler sa commande avant acceptation | P0 | S |
+| #44 | Utilisateur | Suivre sa commande | P0 | S |
+| #45 | Utilisateur | Donner un avis sur une commande terminée | P0 | S |
+| #46 | Employé | Remplacer son mot de passe provisoire | P1 | S |
+| #47 | Employé | Créer un menu | P0 | M |
+| #48 | Employé | Modifier un menu | P0 | M |
+| #49 | Employé | Supprimer (archiver) un menu | P0 | S |
+| #50 | Employé | Gérer la galerie d'images d'un menu | P0 | M |
+| #51 | Employé | Gérer les plats et leurs allergènes | P0 | M |
+| #52 | Employé | Modifier les horaires d'ouverture | P0 | S |
+| #53 | Employé | Consulter les commandes des clients | P0 | S |
+| #54 | Employé | Filtrer les commandes | P0 | S |
+| #55 | Employé | Faire évoluer le statut d'une commande | P0 | M |
+| #56 | Employé | Être prévenu par mail du retour de matériel et de la fin de commande (acteur : utilisateur) | P0 | S |
+| #57 | Employé | Modifier la commande d'un client après contact | P0 | M |
+| #58 | Employé | Annuler la commande d'un client après contact | P0 | S |
+| #59 | Employé | Valider ou refuser les avis des clients | P0 | S |
+| #64 | Employé | Ajouter un régime alimentaire ou un thème | P2 | S |
+| #60 | Administrateur | Créer un compte employé | P0 | M |
+| #61 | Administrateur | Désactiver un compte employé | P0 | S |
+| #62 | Administrateur | Comparer le nombre de commandes par menu | P0 | M |
+| #63 | Administrateur | Consulter le chiffre d'affaires par menu | P0 | M |
+| #65 | Administrateur | Consulter l'historique des actions d'un employé | P2 | S |
+
+**Priorités** : P0 = exigence explicite de l'expression du besoin ; P1 = interprétation qui renforce la sécurité ; P2 = amélioration facultative.
+**Tailles** : S = moins de 2 h ; M = une demi-journée.
