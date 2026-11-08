@@ -208,15 +208,28 @@ L'administrateur dispose de toutes les fonctionnalités de l'espace employé, ai
 
 #### Gestion des comptes employés
 
+- Rubrique « Comptes employés » listant tous les comptes employés avec leur statut (actif ou désactivé), et une recherche par nom, prénom ou adresse mail
 - Création d'un compte employé avec une adresse mail (identifiant) et un mot de passe provisoire
-- Envoi automatique d'un mail à l'employé pour l'informer de la création de son compte, sans communiquer le mot de passe
+- Informations demandées : nom, prénom et adresse mail uniquement, pour ne collecter que les données nécessaires (RGPD)
+- Mot de passe provisoire généré aléatoirement et affiché, pour que l'administrateur le transmette oralement à l'employé
+- Adresse mail déjà utilisée : création refusée avec un message clair
+- Envoi automatique d'un mail à l'employé pour l'informer de la création de son compte, avec un lien vers la page de connexion, sans communiquer le mot de passe
 - Désactivation d'un compte employé, par exemple en cas de départ de l'entreprise
+- Désactivation après confirmation, avec effet immédiat : les sessions ouvertes de ce compte sont fermées, et son historique d'actions est conservé
+- Réactivation possible d'un compte désactivé, avec un nouveau mot de passe provisoire à changer à la première connexion
+- Consultation de l'historique des actions d'un employé
 - Aucune création de compte administrateur possible depuis l'application
 
 #### Statistiques
 
+- Rubrique « Statistiques », accessible uniquement à l'administrateur
 - Nombre de commandes par menu, avec un graphique pour comparer les menus entre eux (données issues de la base non relationnelle)
+- Graphique en barres accompagné d'un tableau reprenant les mêmes chiffres
+- Commandes comptées : toutes, sauf les commandes annulées ; filtre par période
 - Calcul du chiffre d'affaires par menu, avec un filtre par menu et un filtre sur une période
+- Chiffre d'affaires présenté dans un tableau : prix du menu après réduction, frais de livraison sur une ligne séparée
+- Distinction entre chiffre d'affaires réalisé (commandes livrées ou terminées) et prévisionnel (commandes acceptées, pas encore livrées) ; les commandes en attente et annulées ne sont pas comptées
+- Totaux mis à jour selon les filtres, sans rechargement de la page ; données issues de la base non relationnelle, comme pour le graphique
 
 ## Règles de gestion
 
