@@ -22,7 +22,7 @@ J'ai choisi GitHub Projects car les cartes sont des issues du dépôt : chaque c
 | Terminé | Cartes testées et fusionnées dans `dev` |
 
 Champs personnalisés : 
-- **Priorité** : P0 (Priorité absolue), P1 (important), P2 (bonus)
+- **Priorité** : P0 (priorité absolue), P1 (important), P2 (bonus)
 - **Jalon** : J0 à J5
 - **Catégorie** : Conception, Fonctionnalité, Documentation, DevOps, Bug
 - **Taille** : S (moins de 2h), M (une demi-journée), L (une journée ou plus, à découper si possible)

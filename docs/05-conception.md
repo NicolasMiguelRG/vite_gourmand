@@ -11,7 +11,7 @@ Ils sont réalisés avec **PlantUML**, via l'extension VS Code, en rendu local :
 - la même syntaxe servira pour les diagrammes de séquence ;
 - le rendu local évite d'envoyer le contenu des diagrammes à un serveur externe.
 
-Les fichiers sources se trouvent dans `docs/diagrammes/`, et les images exportées dans `docs/images/`.
+Les fichiers sources se trouvent dans `docs/diagrammes/`, et les images exportées dans `docs/images/conception`.
 
 ### Découpage
 
