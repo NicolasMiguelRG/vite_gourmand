@@ -1,16 +1,17 @@
-@startuml cas-utilisation-public 
-left to right direction 
+@startuml cas-utilisation-public
+left to right direction
 
 actor Visiteur
-actor "Service d'envoi de mails" as Mail 
+actor "Service d'envoi de mails" as Mail
 
 rectangle "Vite & Gourmand - Espace public" {
-    usecase "Découvir l'entreprise" as UC1
+    usecase "Découvrir l'entreprise" as UC1
     usecase "Consulter les avis clients" as UC2
     usecase "Consulter les menus" as UC3
     usecase "Filtrer les menus" as UC4
     usecase "Consulter le détail d'un menu" as UC5
     usecase "Créer un compte" as UC6
+    usecase "Confirmer son adresse mail" as UC12
     usecase "Se connecter" as UC7
     usecase "Réinitialiser son mot de passe" as UC8
     usecase "Contacter l'entreprise" as UC9
@@ -23,6 +24,7 @@ Visiteur --> UC2
 Visiteur --> UC3
 Visiteur --> UC5
 Visiteur --> UC6
+Visiteur --> UC12
 Visiteur --> UC7
 Visiteur --> UC9
 Visiteur --> UC10
@@ -31,9 +33,14 @@ Visiteur --> UC11
 UC3 <.. UC4 : <<extend>>
 UC7 <.. UC8 : <<extend>>
 
-UC6 --> Mail : mail de bienvenue
-UC8 --> Mail : lien de reinitialisation
+note left of UC12
+  Précondition : avoir créé un compte.
+  Le compte n'est activé qu'après
+  confirmation (RG-33).
+end note
+
+UC6 --> Mail : bienvenue + lien de confirmation
+UC8 --> Mail : lien de réinitialisation + alerte de modification
 UC9 --> Mail : demande transmise à l'entreprise
 
 @enduml
-
