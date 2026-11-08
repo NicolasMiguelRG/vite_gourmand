@@ -239,47 +239,65 @@ que j'ai faits lorsque l'expression du besoin était incomplète ou ambiguë. Il
 
 ### Menus et plats
 
-- **RG-01** : Un menu possède un thème parmi : Noël, Pâques, classique, événement (p. 4).
+- **RG-01** : Un menu possède un thème parmi : Noël, Pâques, classique, événement. Les thèmes sont stockés en base de données : un employé ou l'administrateur peut en ajouter (p. 4 ; ajout : interprétation).
 - **RG-02** : Un menu possède un régime parmi : classique, végétarien, vegan, pescétarien, sans gluten, sans lactose. Les régimes sont stockés en base de données : un employé ou l'administrateur peut en ajouter (p. 4 ; ajout autorisé par l'expression du besoin).
 - **RG-03** : Un plat est une entrée, un plat principal ou un dessert, et peut appartenir à plusieurs menus (p. 4).
-- **RG-04** : Un plat peut posséder une liste d'allergènes (p. 4).
+- **RG-04** : Un plat peut posséder une liste d'allergènes, choisis parmi les 14 allergènes à déclaration obligatoire du règlement européen INCO n° 1169/2011, annexe II (p. 4 ; liste réglementaire : interprétation).
 - **RG-05** : Le prix d'un menu est défini pour son nombre minimum de personnes (p. 4).
-- **RG-06** : Le stock indique le nombre de commandes encore possibles pour un menu. Il diminue de 1 à chaque commande ; à 0, le menu ne peut plus être commandé (interprétation).
+- **RG-06** : Le stock indique le nombre de commandes encore possibles pour un menu. Il diminue de 1 à chaque commande et augmente de 1 à chaque annulation ; à 0, le menu reste affiché comme épuisé mais ne peut plus être commandé. Un employé peut le réapprovisionner (interprétation).
+- **RG-29** : Un menu possède un statut : brouillon, publié ou archivé. Seul un menu publié est visible et commandable par les clients. Un menu ne peut être publié qu'avec au moins une photo. Supprimer un menu revient à l'archiver : il est conservé et peut être republié (interprétation).
+- **RG-30** : Un menu possède un délai minimum de commande, exprimé en jours : la date de prestation choisie doit respecter ce délai (interprétation).
+- **RG-31** : Un menu et un plat peuvent comprendre du matériel prêté, avec sa description. Un menu comprend du matériel prêté si lui-même ou l'un de ses plats en comprend (interprétation).
+- **RG-32** : Les photos des menus et des plats sont acceptées aux formats JPEG, PNG et WebP, dans la limite de 20 Mo par fichier envoyé (interprétation).
 
 ### Comptes et connexion
 
 - **RG-07** : Le mot de passe contient au moins 10 caractères, dont au moins une majuscule, une minuscule, un chiffre et un caractère spécial (p. 5).
 - **RG-08** : L'adresse mail sert d'identifiant et doit être unique (p. 5 ; unicité : interprétation).
 - **RG-09** : Un compte créé par inscription reçoit le rôle « utilisateur » (p. 5).
-- **RG-10** : Seul l'administrateur peut créer un compte employé, avec une adresse mail et un mot de passe provisoire. Le mot de passe n'est jamais envoyé par mail : l'employé l'obtient auprès de l'administrateur (p. 9).
-- **RG-10 bis** : À sa première connexion, l'employé doit remplacer le mot de passe provisoire par un mot de passe personnel (interprétation).
-- **RG-11** : Un compte employé désactivé ne peut plus se connecter (p. 9).
+- **RG-10** : Seul l'administrateur peut créer un compte employé, avec une adresse mail et un mot de passe provisoire. Le mot de passe n'est jamais envoyé par mail : l'employé l'obtient auprès de l'administrateur (p. 9). Le mot de passe provisoire est généré aléatoirement et respecte RG-07 (interprétation).
+- **RG-10 bis** : À sa première connexion, l'employé doit remplacer le mot de passe provisoire par un mot de passe personnel, différent du mot de passe provisoire (interprétation).
+- **RG-11** : Un compte employé désactivé ne peut plus se connecter (p. 9). La désactivation ferme immédiatement ses sessions ouvertes ; un compte réactivé reçoit un nouveau mot de passe provisoire (interprétation).
 - **RG-12** : Il existe un seul compte administrateur, créé par le développeur ; aucun compte administrateur ne peut être créé depuis l'application (p. 9).
+- **RG-33** : Un compte créé par inscription n'est activé qu'après confirmation de l'adresse mail. Le lien de confirmation est à usage unique et à durée limitée (interprétation).
+- **RG-34** : Le lien de réinitialisation du mot de passe est valable 1 heure et ne peut être utilisé qu'une seule fois (interprétation).
 
 ### Calcul du prix d'une commande
 
 - **RG-13** : Le nombre de personnes doit être supérieur ou égal au nombre minimum du menu (p. 7).
 - **RG-14** : Le prix du menu est proportionnel au nombre de personnes : (prix du menu ÷ nombre minimum) × nombre de personnes (interprétation).
 - **RG-15** : Une réduction de 10 % s'applique sur le prix du menu dès que le nombre de personnes atteint le minimum + 5 (p. 7 ; « dès que » : interprétation).
-- **RG-16** : Livraison dans la ville de Bordeaux : gratuite. Hors de Bordeaux : 5 € + 0,59 € par kilomètre, calculés depuis l'adresse de l'entreprise (p. 7 ; point de départ : interprétation).
+- **RG-16** : Livraison dans la ville de Bordeaux : gratuite. Hors de Bordeaux : 5 € + 0,59 € par kilomètre, calculés depuis l'adresse de l'entreprise (p. 7 ; point de départ : interprétation). « Dans Bordeaux » désigne la commune de Bordeaux ; la distance est celle du trajet aller par la route, calculée automatiquement. Si l'adresse est introuvable ou la distance incalculable, la commande ne peut pas être validée (interprétation).
 - **RG-17** : La réduction ne s'applique pas aux frais de livraison (interprétation).
 - **RG-18** : Prix total = prix du menu après réduction + frais de livraison. Le détail est affiché avant validation (p. 7).
+- **RG-35** : À la validation d'une commande, son prix (menu, réduction, livraison, total), la composition du menu, les allergènes et le matériel prêté sont figés. Une modification ultérieure du menu ou d'un plat ne change pas les commandes existantes ; seule une modification de la commande elle-même recalcule son prix (interprétation).
 
 ### Statuts d'une commande
 
 - **RG-19** : Une commande passée reçoit le statut « en attente » (interprétation).
-- **RG-20** : Ordre des statuts : en attente → accepté → en préparation → en cours de livraison → livré → (en attente du retour de matériel) → terminée (p. 8).
-- **RG-21** : Chaque changement de statut est enregistré avec sa date et son heure (p. 7).
+- **RG-20** : Ordre des statuts : en attente → accepté → en préparation → en cours de livraison → livré → (en attente du retour de matériel) → terminée (p. 8). Seul le statut suivant est autorisé : après « livré », la commande passe « en attente du retour de matériel » si elle comprend du matériel prêté (RG-31), « terminée » sinon (interprétation).
+- **RG-21** : Chaque changement de statut est enregistré avec sa date et son heure (p. 7), ainsi que l'employé qui l'a effectué (interprétation).
 - **RG-22** : L'utilisateur peut modifier ou annuler sa commande uniquement au statut « en attente ». Le menu choisi n'est pas modifiable (p. 7).
-- **RG-23** : Un employé ne peut modifier ou annuler une commande qu'après avoir contacté le client ; le mode de contact (GSM ou mail) et le motif sont obligatoires (p. 8).
+- **RG-23** : Un employé ne peut modifier ou annuler une commande qu'après avoir contacté le client ; le mode de contact (GSM ou mail) et le motif sont obligatoires (p. 8). C'est possible tant que la commande n'est pas « en cours de livraison ». L'accord du client est obligatoire pour une modification, mais pas pour une annulation. Chaque contact est enregistré avec son mode, sa date, son heure et l'employé (interprétation).
 - **RG-24** : Au statut « en attente du retour de matériel », un mail informe le client qu'il dispose de 10 jours ouvrés pour restituer le matériel, sous peine de 600 € de frais prévus par les CGV (p. 8).
 - **RG-25** : Une commande est « terminée » quand elle a été livrée sans prêt de matériel, ou quand le matériel a été restitué. Un mail invite alors l'utilisateur à donner son avis (p. 7-8).
+- **RG-36** : Une commande annulée, par le client (RG-22) ou par un employé (RG-23), passe au statut « annulée ». Ce statut est en dehors de l'ordre de RG-20 et ne peut pas être choisi comme un changement de statut ordinaire (interprétation).
 
 ### Avis
 
 - **RG-26** : Un avis ne peut être donné que sur une commande terminée, et une seule fois par commande (p. 7 ; « une seule fois » : interprétation).
 - **RG-27** : Un avis comprend une note entière de 1 à 5 et un commentaire (p. 7).
-- **RG-28** : Un avis est en attente jusqu'à sa validation ou son refus par un employé ; seuls les avis validés sont affichés (p. 8).
+- **RG-28** : Un avis est en attente jusqu'à sa validation ou son refus par un employé ; seuls les avis validés sont affichés (p. 8). Un refus exige un motif, communiqué au client par mail. Un avis validé peut être retiré, avec un motif obligatoire : il repasse alors en « refusé ». La note n'est pas montrée à l'employé qui modère (interprétation).
+- **RG-37** : Un avis publié affiche sa note, son commentaire et le menu concerné, sans le nom du client ; si le menu est archivé, la mention « menu plus proposé » l'accompagne (interprétation).
+
+### Horaires
+
+- **RG-38** : Pour chaque jour de la semaine, les horaires d'ouverture comportent une plage horaire, avec une deuxième plage facultative, ou la mention « Fermé ». L'heure de fermeture d'une plage est postérieure à son heure d'ouverture, et deux plages d'un même jour ne se chevauchent pas (interprétation).
+
+### Statistiques
+
+- **RG-39** : Le nombre de commandes par menu compte toutes les commandes, sauf les commandes annulées (interprétation).
+- **RG-40** : Le chiffre d'affaires d'un menu correspond au prix du menu après réduction ; les frais de livraison sont comptés à part. Il est **réalisé** pour les commandes livrées ou terminées, et **prévisionnel** pour les commandes acceptées pas encore livrées ; les commandes en attente et annulées ne sont pas comptées (interprétation).
 
 ### Choix d'interprétation
 
