@@ -146,7 +146,8 @@ l'administrateur peut le faire aussi.
 
 ### Espace employé
 
-#### Compte 
+#### Compte
+
 - Remplacement obligatoire du mot de passe provisoire par un mot de passe personnel à la première connexion (RG-10 bis)
 - Tant que le mot de passe provisoire n'est pas remplacé, toute page de l'espace employé renvoie vers le formulaire de changement
 - Nouveau mot de passe saisi deux fois à l'identique, et différent du mot de passe provisoire
@@ -171,7 +172,8 @@ l'administrateur peut le faire aussi.
 - Modification d'un plat, allergènes compris, appliquée immédiatement à tous les menus qui le contiennent ; les commandes existantes conservent la composition et les allergènes validés par le client
 - Archivage d'un plat impossible tant qu'il est utilisé dans un menu publié
 - Modification des horaires affichés dans le pied de page : deux plages horaires possibles par jour, ou « Fermé »
-- Ajout d'un régime alimentaire ou d'un thème aux listes proposées
+- Rubrique « Régimes et thèmes » : ajout d'un régime alimentaire ou d'un thème aux listes proposées ; un nom déjà existant est refusé, sans tenir compte des majuscules ni des accents
+- Suppression impossible d'un régime ou d'un thème utilisé par au moins un menu ; un message indique les menus concernés
 
 #### Gestion des commandes
 
@@ -217,7 +219,7 @@ L'administrateur dispose de toutes les fonctionnalités de l'espace employé, ai
 - Désactivation d'un compte employé, par exemple en cas de départ de l'entreprise
 - Désactivation après confirmation, avec effet immédiat : les sessions ouvertes de ce compte sont fermées, et son historique d'actions est conservé
 - Réactivation possible d'un compte désactivé, avec un nouveau mot de passe provisoire à changer à la première connexion
-- Consultation de l'historique des actions d'un employé
+- Consultation de l'historique des actions d'un employé, actif ou désactivé : changements de statut, modifications et annulations de commandes avec leur motif, décisions sur les avis ; de la plus récente à la plus ancienne, avec un filtre par période
 - Aucune création de compte administrateur possible depuis l'application
 
 #### Statistiques
@@ -301,18 +303,39 @@ que j'ai faits lorsque l'expression du besoin était incomplète ou ambiguë. Il
 
 ### Choix d'interprétation
 
-| Règle     | Ambiguïté de l'expression du besoin                                 | Choix retenu et justification                                                                                                                                                     |
-| --------- | ------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| RG-02     | L'expression du besoin cite trois régimes et autorise à en ajouter  | Ajout de pescétarien, sans gluten et sans lactose, régimes courants en restauration. Régimes stockés en base de données pour que l'équipe puisse en ajouter sans modifier le code |
-| RG-06     | Le fonctionnement du stock n'est pas détaillé                       | Une commande consomme une unité : c'est le sens de « il reste 5 commandes possibles »                                                                                             |
-| RG-08     | L'unicité du mail n'est pas mentionnée                              | Le mail sert d'identifiant, donc deux comptes ne peuvent pas partager le même                                                                                                     |
-| RG-10 bis | L'administrateur connaît le mot de passe de l'employé               | Changement obligatoire à la première connexion : l'exigence du client est respectée, et seul l'employé connaît son mot de passe définitif                                         |
-| RG-14     | Le calcul du prix selon le nombre de personnes n'est pas précisé    | Un prix proportionnel est le plus simple à comprendre pour le client                                                                                                              |
-| RG-15     | « 5 personnes de plus » peut se lire « exactement » ou « au moins » | « Au moins » : une remise qui disparaîtrait à 6 personnes de plus n'aurait pas de sens                                                                                            |
-| RG-16     | Le point de départ du kilométrage n'est pas indiqué                 | L'adresse de l'entreprise, d'où partent les livraisons                                                                                                                            |
-| RG-17     | Le périmètre de la réduction n'est pas précisé                      | L'expression du besoin lie la réduction au nombre de personnes, donc au prix du menu seulement                                                                                    |
-| RG-19     | Aucun statut n'est nommé avant « accepté »                          | « En attente » désigne une commande reçue mais pas encore validée par l'équipe                                                                                                    |
-| RG-26     | Le nombre d'avis par commande n'est pas limité                      | Un avis par commande évite les doublons et reste fidèle à « depuis la commande »                                                                                                  |
+| Règle                          | Ambiguïté de l'expression du besoin                                                                                    | Choix retenu et justification                                                                                                                                                                                                           |
+| ------------------------------ | ---------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| RG-01                          | Les thèmes sont listés, sans indiquer s'ils peuvent évoluer                                                            | Thèmes stockés en base de données et extensibles, comme les régimes : une liste fermée évite les doublons (« Noël » / « Noel ») qui casseraient le filtre                                                                               |
+| RG-02                          | L'expression du besoin cite trois régimes et autorise à en ajouter                                                     | Ajout de pescétarien, sans gluten et sans lactose, régimes courants en restauration. Régimes stockés en base de données pour que l'équipe puisse en ajouter sans modifier le code                                                       |
+| RG-04                          | La liste des allergènes n'est pas précisée                                                                             | Les 14 allergènes à déclaration obligatoire du règlement INCO : c'est la liste que l'entreprise doit déjà déclarer                                                                                                                      |
+| RG-06                          | Le fonctionnement du stock n'est pas détaillé                                                                          | Une commande consomme une unité : c'est le sens de « il reste 5 commandes possibles ». Une annulation la rend. Un menu épuisé reste affiché pour que le client sache qu'il existe                                                       |
+| RG-08                          | L'unicité du mail n'est pas mentionnée                                                                                 | Le mail sert d'identifiant, donc deux comptes ne peuvent pas partager le même                                                                                                                                                           |
+| RG-10                          | Le mode de création du mot de passe provisoire n'est pas précisé                                                       | Mot de passe généré aléatoirement : l'administrateur n'a pas à en inventer un, et il respecte forcément RG-07                                                                                                                           |
+| RG-10 bis                      | L'administrateur connaît le mot de passe de l'employé                                                                  | Changement obligatoire à la première connexion : l'exigence du client est respectée, et seul l'employé connaît son mot de passe définitif                                                                                               |
+| RG-11                          | Les effets de la désactivation ne sont pas détaillés                                                                   | Sessions fermées immédiatement, sinon un employé déjà connecté garderait l'accès. Réactivation possible avec un nouveau mot de passe provisoire, en cas de retour de l'employé                                                          |
+| RG-14                          | Le calcul du prix selon le nombre de personnes n'est pas précisé                                                       | Un prix proportionnel est le plus simple à comprendre pour le client                                                                                                                                                                    |
+| RG-15                          | « 5 personnes de plus » peut se lire « exactement » ou « au moins »                                                    | « Au moins » : une remise qui disparaîtrait à 6 personnes de plus n'aurait pas de sens                                                                                                                                                  |
+| RG-16                          | Le point de départ du kilométrage n'est pas indiqué ; « dans la ville de Bordeaux » et la distance ne sont pas définis | L'adresse de l'entreprise, d'où partent les livraisons ; la commune de Bordeaux, limite administrative vérifiable ; la distance aller par la route, calculée automatiquement pour éviter les erreurs de saisie                          |
+| RG-17                          | Le périmètre de la réduction n'est pas précisé                                                                         | L'expression du besoin lie la réduction au nombre de personnes, donc au prix du menu seulement                                                                                                                                          |
+| RG-19                          | Aucun statut n'est nommé avant « accepté »                                                                             | « En attente » désigne une commande reçue mais pas encore validée par l'équipe                                                                                                                                                          |
+| RG-20                          | Les retours en arrière et les sauts de statut ne sont pas évoqués                                                      | Seul le statut suivant est autorisé : le suivi reste cohérent pour le client                                                                                                                                                            |
+| RG-21                          | L'auteur d'un changement de statut n'est pas demandé                                                                   | L'employé est enregistré, pour savoir qui a fait quoi en cas de problème                                                                                                                                                                |
+| RG-23                          | Le moment limite et l'accord du client ne sont pas précisés                                                            | Jusqu'à « en cours de livraison » : après le départ de la livraison, il est trop tard. Accord exigé pour modifier (le client doit accepter ce qu'il paiera), pas pour annuler (l'entreprise peut ne plus pouvoir assurer la prestation) |
+| RG-26                          | Le nombre d'avis par commande n'est pas limité                                                                         | Un avis par commande évite les doublons et reste fidèle à « depuis la commande »                                                                                                                                                        |
+| RG-28                          | Les suites d'un refus ne sont pas précisées                                                                            | Motif obligatoire et mail au client, pour la transparence. Note masquée à l'employé, pour que la décision porte sur le contenu du commentaire et non sur la note (éviter de ne refuser que les mauvaises notes)                         |
+| RG-29                          | La suppression d'un menu n'est pas détaillée                                                                           | Un brouillon permet de préparer un menu avant de le montrer. Supprimer = archiver, pour conserver les commandes, les avis et les statistiques liés au menu                                                                              |
+| RG-30                          | Aucun délai de commande n'est mentionné                                                                                | Un délai par menu laisse à l'équipe le temps de préparer la prestation                                                                                                                                                                  |
+| RG-31                          | Le matériel prêté n'est rattaché à aucun élément                                                                       | Rattaché au menu et au plat, pour savoir automatiquement, après « livré », si la commande passe « en attente du retour de matériel »                                                                                                    |
+| RG-32                          | Les formats et la taille des photos ne sont pas précisés                                                               | Formats d'image courants sur le web ; 20 Mo pour accepter les photos d'appareils professionnels, redimensionnées ensuite pour l'affichage                                                                                               |
+| RG-33                          | La vérification de l'adresse mail n'est pas mentionnée                                                                 | Confirmation par lien : l'adresse appartient bien à la personne qui crée le compte                                                                                                                                                      |
+| RG-34                          | La durée de validité du lien de réinitialisation n'est pas précisée                                                    | Une durée courte et un usage unique limitent le risque si le mail est lu par quelqu'un d'autre                                                                                                                                          |
+| RG-35                          | L'effet d'une modification de menu sur les commandes passées n'est pas évoqué                                          | Le client paie et reçoit ce qu'il a validé ; une modification ultérieure ne le concerne pas                                                                                                                                             |
+| RG-36                          | Aucun statut n'est nommé pour une commande annulée                                                                     | Statut « annulée » : la commande reste consultable avec son motif, au lieu d'être effacée                                                                                                                                               |
+| RG-37                          | Le contenu affiché d'un avis n'est pas précisé                                                                         | Nom du client masqué (minimisation des données, RGPD) ; menu indiqué pour donner du sens à l'avis                                                                                                                                       |
+| RG-38                          | Le format des horaires n'est pas précisé                                                                               | Deux plages par jour pour gérer les journées coupées, ou « Fermé »                                                                                                                                                                      |
+| RG-39                          | Les commandes comptées ne sont pas précisées                                                                           | Les annulées sont exclues : elles ne reflètent pas la popularité réelle d'un menu                                                                                                                                                       |
+| RG-40                          | Le calcul du chiffre d'affaires n'est pas précisé                                                                      | Livraison à part, car elle ne dépend pas du menu ; réalisé et prévisionnel distingués pour ne pas compter de l'argent pas encore gagné                                                                                                  |
+| Filtre « nombre de personnes » | Le filtre peut se lire « minimum égal à » ou « menus possibles pour ce nombre »                                        | Menus dont le minimum est inférieur ou égal au nombre saisi : le visiteur saisit son nombre de convives et voit les menus qu'il peut commander                                                                                          |
 
 ## Contraintes
 
@@ -355,49 +378,49 @@ Les spécifications fonctionnelles ci-dessus ont été traduites en user stories
 Chaque user story est une carte du tableau GitHub Projects ([Vite & Gourmand - ECF](https://github.com/users/NicolasMiguelRG/projects/2)), qui contient ses critères d'acceptation, ses dépendances et les règles de gestion concernées.
 **Les cartes font référence** : le tableau ci-dessous n'en est qu'un récapitulatif.
 
-| Carte | Espace | User story | Priorité | Taille |
-| --- | --- | --- | --- | --- |
-| #25 | Public | Découvrir l'entreprise et son équipe | P0 | S |
-| #26 | Public | Consulter les avis des clients | P0 | S |
-| #27 | Public | Consulter l'ensemble des menus | P0 | S |
-| #28 | Public | Filtrer les menus | P0 | M |
-| #29 | Public | Consulter le détail d'un menu | P0 | M |
-| #30 | Public | Créer un compte | P0 | M |
-| #31 | Public | Confirmer son adresse mail | P1 | S |
-| #32 | Public | Se connecter | P0 | M |
-| #33 | Public | Réinitialiser son mot de passe | P0 | M |
-| #34 | Public | Contacter l'entreprise | P0 | S |
-| #35 | Public | Connaître les horaires d'ouverture | P0 | S |
-| #36 | Public | Consulter les mentions légales et les CGV | P0 | S |
-| #37 | Utilisateur | Modifier ses informations personnelles | P0 | M |
-| #38 | Utilisateur | Commander un menu | P0 | M |
-| #39 | Utilisateur | Bénéficier de la réduction de groupe | P0 | S |
-| #40 | Utilisateur | Connaître le détail du prix avant validation | P0 | M |
-| #41 | Utilisateur | Consulter ses commandes | P0 | S |
-| #42 | Utilisateur | Modifier sa commande avant acceptation | P0 | M |
-| #43 | Utilisateur | Annuler sa commande avant acceptation | P0 | S |
-| #44 | Utilisateur | Suivre sa commande | P0 | S |
-| #45 | Utilisateur | Donner un avis sur une commande terminée | P0 | S |
-| #46 | Employé | Remplacer son mot de passe provisoire | P1 | S |
-| #47 | Employé | Créer un menu | P0 | M |
-| #48 | Employé | Modifier un menu | P0 | M |
-| #49 | Employé | Supprimer (archiver) un menu | P0 | S |
-| #50 | Employé | Gérer la galerie d'images d'un menu | P0 | M |
-| #51 | Employé | Gérer les plats et leurs allergènes | P0 | M |
-| #52 | Employé | Modifier les horaires d'ouverture | P0 | S |
-| #53 | Employé | Consulter les commandes des clients | P0 | S |
-| #54 | Employé | Filtrer les commandes | P0 | S |
-| #55 | Employé | Faire évoluer le statut d'une commande | P0 | M |
-| #56 | Employé | Être prévenu par mail du retour de matériel et de la fin de commande (acteur : utilisateur) | P0 | S |
-| #57 | Employé | Modifier la commande d'un client après contact | P0 | M |
-| #58 | Employé | Annuler la commande d'un client après contact | P0 | S |
-| #59 | Employé | Valider ou refuser les avis des clients | P0 | S |
-| #64 | Employé | Ajouter un régime alimentaire ou un thème | P2 | S |
-| #60 | Administrateur | Créer un compte employé | P0 | M |
-| #61 | Administrateur | Désactiver un compte employé | P0 | S |
-| #62 | Administrateur | Comparer le nombre de commandes par menu | P0 | M |
-| #63 | Administrateur | Consulter le chiffre d'affaires par menu | P0 | M |
-| #65 | Administrateur | Consulter l'historique des actions d'un employé | P2 | S |
+| Carte | Espace         | User story                                                                                  | Priorité | Taille |
+| ----- | -------------- | ------------------------------------------------------------------------------------------- | -------- | ------ |
+| #25   | Public         | Découvrir l'entreprise et son équipe                                                        | P0       | S      |
+| #26   | Public         | Consulter les avis des clients                                                              | P0       | S      |
+| #27   | Public         | Consulter l'ensemble des menus                                                              | P0       | S      |
+| #28   | Public         | Filtrer les menus                                                                           | P0       | M      |
+| #29   | Public         | Consulter le détail d'un menu                                                               | P0       | M      |
+| #30   | Public         | Créer un compte                                                                             | P0       | M      |
+| #31   | Public         | Confirmer son adresse mail                                                                  | P1       | S      |
+| #32   | Public         | Se connecter                                                                                | P0       | M      |
+| #33   | Public         | Réinitialiser son mot de passe                                                              | P0       | M      |
+| #34   | Public         | Contacter l'entreprise                                                                      | P0       | S      |
+| #35   | Public         | Connaître les horaires d'ouverture                                                          | P0       | S      |
+| #36   | Public         | Consulter les mentions légales et les CGV                                                   | P0       | S      |
+| #37   | Utilisateur    | Modifier ses informations personnelles                                                      | P0       | M      |
+| #38   | Utilisateur    | Commander un menu                                                                           | P0       | M      |
+| #39   | Utilisateur    | Bénéficier de la réduction de groupe                                                        | P0       | S      |
+| #40   | Utilisateur    | Connaître le détail du prix avant validation                                                | P0       | M      |
+| #41   | Utilisateur    | Consulter ses commandes                                                                     | P0       | S      |
+| #42   | Utilisateur    | Modifier sa commande avant acceptation                                                      | P0       | M      |
+| #43   | Utilisateur    | Annuler sa commande avant acceptation                                                       | P0       | S      |
+| #44   | Utilisateur    | Suivre sa commande                                                                          | P0       | S      |
+| #45   | Utilisateur    | Donner un avis sur une commande terminée                                                    | P0       | S      |
+| #46   | Employé        | Remplacer son mot de passe provisoire                                                       | P1       | S      |
+| #47   | Employé        | Créer un menu                                                                               | P0       | M      |
+| #48   | Employé        | Modifier un menu                                                                            | P0       | M      |
+| #49   | Employé        | Supprimer (archiver) un menu                                                                | P0       | S      |
+| #50   | Employé        | Gérer la galerie d'images d'un menu                                                         | P0       | M      |
+| #51   | Employé        | Gérer les plats et leurs allergènes                                                         | P0       | M      |
+| #52   | Employé        | Modifier les horaires d'ouverture                                                           | P0       | S      |
+| #53   | Employé        | Consulter les commandes des clients                                                         | P0       | S      |
+| #54   | Employé        | Filtrer les commandes                                                                       | P0       | S      |
+| #55   | Employé        | Faire évoluer le statut d'une commande                                                      | P0       | M      |
+| #56   | Employé        | Être prévenu par mail du retour de matériel et de la fin de commande (acteur : utilisateur) | P0       | S      |
+| #57   | Employé        | Modifier la commande d'un client après contact                                              | P0       | M      |
+| #58   | Employé        | Annuler la commande d'un client après contact                                               | P0       | S      |
+| #59   | Employé        | Valider ou refuser les avis des clients                                                     | P0       | S      |
+| #64   | Employé        | Ajouter un régime alimentaire ou un thème                                                   | P2       | S      |
+| #60   | Administrateur | Créer un compte employé                                                                     | P0       | M      |
+| #61   | Administrateur | Désactiver un compte employé                                                                | P0       | S      |
+| #62   | Administrateur | Comparer le nombre de commandes par menu                                                    | P0       | M      |
+| #63   | Administrateur | Consulter le chiffre d'affaires par menu                                                    | P0       | M      |
+| #65   | Administrateur | Consulter l'historique des actions d'un employé                                             | P2       | S      |
 
 **Priorités** : P0 = exigence explicite de l'expression du besoin ; P1 = interprétation qui renforce la sécurité ; P2 = amélioration facultative.
 **Tailles** : S = moins de 2 h ; M = une demi-journée.
