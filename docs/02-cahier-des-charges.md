@@ -148,23 +148,58 @@ l'administrateur peut le faire aussi.
 
 #### Compte 
 - Remplacement obligatoire du mot de passe provisoire par un mot de passe personnel à la première connexion (RG-10 bis)
+- Tant que le mot de passe provisoire n'est pas remplacé, toute page de l'espace employé renvoie vers le formulaire de changement
+- Nouveau mot de passe saisi deux fois à l'identique, et différent du mot de passe provisoire
+- Après le changement, fermeture de la session : l'employé se reconnecte avec son nouveau mot de passe
+- Mail informant l'employé que son mot de passe a été modifié, sans le contenir
 
 #### Gestion des menus, plats et horaires
 
+- Rubrique « Gestion des menus » listant tous les menus, quel que soit leur statut : brouillon, publié ou archivé
 - Création, modification et suppression des menus
-- Création, modification et suppression des plats, avec leurs allergènes
-- Modification des horaires affichés dans le pied de page
+- Informations d'un menu : titre, description, thème, régime, plats, nombre minimum de personnes, prix pour ce minimum, conditions, délai minimum de commande, stock, et matériel prêté éventuel avec sa description
+- Thème et régime choisis dans des listes ; plats choisis dans le catalogue par une recherche à la saisie, rangés automatiquement par catégorie
+- Valeurs impossibles refusées avec un message (prix, nombre minimum, stock ou délai)
+- Menu créé au statut « brouillon », invisible pour les clients, puis rendu visible par un bouton « Publier » ; un menu publié peut repasser en brouillon
+- Modification appliquée aux nouvelles commandes uniquement : les commandes existantes conservent les informations et le prix validés par le client
+- Suppression = archivage, après confirmation : le menu n'est plus visible ni commandable, mais il est conservé (commandes en cours, avis, statistiques) et peut être republié
+- Galerie d'images : ajout et suppression de photos, choix de l'image principale, texte alternatif obligatoire pour chaque photo
+- Publication impossible sans au moins une photo
+- Rubrique « Gestion des plats » listant les plats du catalogue, avec les boutons Ajouter, Modifier et Archiver
+- Informations d'un plat : nom, catégorie (entrée, plat ou dessert), allergènes, photo facultative avec texte alternatif, et matériel prêté éventuel avec sa description
+- Allergènes choisis dans la liste des allergènes à déclaration obligatoire
+- Modification d'un plat, allergènes compris, appliquée immédiatement à tous les menus qui le contiennent ; les commandes existantes conservent la composition et les allergènes validés par le client
+- Archivage d'un plat impossible tant qu'il est utilisé dans un menu publié
+- Modification des horaires affichés dans le pied de page : deux plages horaires possibles par jour, ou « Fermé »
+- Ajout d'un régime alimentaire ou d'un thème aux listes proposées
 
 #### Gestion des commandes
 
-- Filtre des commandes par statut ou par client, pour retrouver rapidement les commandes à traiter
+- Rubrique « Commandes » affichant par défaut les commandes à traiter (ni terminées ni annulées), triées par date de prestation, la plus proche en premier
+- Pour chaque commande : date et heure de la prestation, client, menu, nombre de personnes et statut
+- Détail d'une commande : coordonnées du client, adresse, date et heure de livraison, menu avec la composition et les allergènes validés, nombre de personnes, détail du prix, statut et historique (statuts, modifications, contacts)
+- Filtre des commandes par statut ou par client, pour retrouver rapidement les commandes à traiter ; filtres combinables, mis à jour sans rechargement de la page, avec un bouton pour les réinitialiser
 - Mise à jour du statut des commandes : accepté, en préparation, en cours de livraison, livré, en attente du retour de matériel, terminée
+- Seuls les statuts suivants autorisés sont proposés ; après « livré », le statut suivant est « en attente du retour de matériel » si du matériel a été prêté, « terminée » sinon
+- Chaque changement de statut demande une confirmation et est enregistré avec l'employé qui l'a effectué
 - Envoi automatique d'un mail au client lorsque la commande passe « en attente du retour de matériel », pour lui rappeler les conditions de restitution
+- Envoi automatique d'un mail au client lorsque la commande passe « terminée », pour l'inviter à donner son avis
+- Échec d'envoi d'un mail : le changement de statut est quand même enregistré, et l'employé en est averti
 - Modification ou annulation d'une commande uniquement après avoir contacté le client (appel GSM ou mail), avec saisie du mode de contact et du motif
+- Motif saisi en premier, puis contact du client par un bouton « GSM » ou « Mail » ; le mail est prérempli et le contact est enregistré automatiquement au clic
+- Modification ou annulation possible tant que la commande n'est pas « en cours de livraison »
+- Modification : accord du client obligatoire ; prix, réduction et frais de livraison recalculés ; le menu n'est pas modifiable ; mail récapitulatif envoyé au client avec le nouveau prix
+- Client en désaccord : la démarche est close sans modifier la commande, et le contact, le motif et le désaccord restent enregistrés dans l'historique
+- Annulation : accord du client non exigé, confirmation demandée ; la commande passe au statut « annulée » et le client reçoit un mail l'informant de l'annulation et de son motif
 
 #### Modération des avis
 
+- Rubrique « Avis » avec trois listes : en attente, validés, refusés ; les avis en attente s'affichent du plus ancien au plus récent
+- Pour chaque avis : commentaire, menu concerné et date ; la note n'est pas affichée, pour que la décision porte uniquement sur le contenu du texte
 - Validation ou refus des avis laissés par les utilisateurs
+- Refus avec un motif obligatoire ; le client reçoit un mail l'informant du refus, avec ce motif
+- Retrait d'un avis validé, avec un motif obligatoire : il passe en « refusé » et disparaît de la page d'accueil
+- Chaque décision est enregistrée avec la date, l'heure et l'employé
 - Seuls les avis validés sont affichés sur la page d'accueil
 
 ### Espace administrateur
