@@ -13,12 +13,12 @@ Enfin, le client exige une application déployée et fonctionnelle à la livrais
 
 ## Acteurs et rôles
 
-| Acteur             | Création du compte                                          | Rôle dans l'application                                                                                                                                          |
-| ------------------ | ----------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Visiteur**       | Aucun compte (non connecté)                                 | Consulte l'accueil et les menus, crée un compte, contacte l'entreprise par le formulaire                                                                         |
-| **Utilisateur**    | Par le visiteur lui-même, à l'inscription                   | Commande un menu, suit, modifie ou annule ses commandes (avant acceptation), modifie ses informations personnelles, donne un avis                                |
-| **Employé**        | Par l'administrateur                                        | Gère les menus, les plats et les horaires, fait évoluer le statut des commandes, valide ou refuse les avis                                                       |
-| **Administrateur** | Par le développeur, pour José ; jamais depuis l'application | Dispose de tous les droits de l'employé, gère les comptes employés (création, désactivation), consulte les statistiques (commandes par menu, chiffre d'affaires) |
+| Acteur             | Création du compte                                          | Rôle dans l'application                                                                                                                                                                                |
+| ------------------ | ----------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Visiteur**       | Aucun compte (non connecté)                                 | Consulte l'accueil et les menus, crée un compte, contacte l'entreprise par le formulaire                                                                                                               |
+| **Utilisateur**    | Par le visiteur lui-même, à l'inscription                   | Commande un menu, suit, modifie ou annule ses commandes (avant acceptation), modifie ses informations personnelles, donne un avis                                                                      |
+| **Employé**        | Par l'administrateur                                        | Gère les menus, les plats et les horaires, fait évoluer le statut des commandes, valide ou refuse les avis                                                                                             |
+| **Administrateur** | Par le développeur, pour José ; jamais depuis l'application | Dispose de tous les droits de l'employé, gère les comptes employés (création, désactivation, réactivation, historique des actions), consulte les statistiques (commandes par menu, chiffre d'affaires) |
 
 L'administrateur hérite des droits de l'employé : tout ce qu'un employé peut faire,
 l'administrateur peut le faire aussi.
