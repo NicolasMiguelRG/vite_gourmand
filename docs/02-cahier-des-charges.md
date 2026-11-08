@@ -32,7 +32,7 @@ l'administrateur peut le faire aussi.
 - Barre de navigation contenant au minimum : retour à l'accueil, accès à tous les menus, connexion, accès à la page de contact
 - Connexion réservée aux comptes utilisateur, employé et administrateur
 - Possibilité d'ajouter d'autres rubriques, dans le respect du RGPD et de la sécurité
-- Pied de page affichant les horaires d'ouverture, du lundi au dimanche
+- Pied de page affichant les horaires d'ouverture, du lundi au dimanche ; un jour sans horaires est indiqué « Fermé »
 - Liens vers les mentions légales et les conditions générales de vente (CGV)
 
 #### Page d'accueil
@@ -40,38 +40,62 @@ l'administrateur peut le faire aussi.
 - Présentation de l'entreprise
 - Mise en avant du professionnalisme de l'équipe
 - Affichage des avis clients validés par un employé ou l'administrateur
+- Chaque avis affiche sa note, son commentaire et le menu concerné, avec la mention « menu plus proposé » si ce menu a été archivé
+- Nom du client non affiché, pour ne publier que les données nécessaires (RGPD)
+- Message indiquant qu'aucun avis n'est encore disponible, si aucun avis n'a été validé
 
 #### Vue globale des menus
 
 - Accessible aux personnes connectées comme non connectées
+- Affichage des menus publiés uniquement
 - Pour chaque menu : titre, description, nombre minimum de personnes, prix associé et bouton d'accès au détail
-- Filtres : prix maximum, fourchette de prix, thème, régime, nombre minimum de personnes
+- Filtres : prix maximum, fourchette de prix, thème, régime, nombre de personnes
+- Filtre « nombre de personnes » : affiche les menus dont le nombre minimum est inférieur ou égale au nombre saisi
+- Filtres combinables, avec un bouton pour les réinitialiser
 - Mise à jour dynamique des menus affichés, sans rechargement de la page
+- Message indiquant qu'aucun menu ne correspond, si les filtres ne donnent aucun résultat
 
 #### Vue détaillée d'un menu
 
 - Affichage de toutes les informations du menu : titre, galerie d'images, description, thème, régime, liste des plats (entrées, plats, desserts) avec leurs allergènes, nombre minimum de personnes, prix, conditions et stock disponible
 - Conditions du menu mises en évidence, pour que le client ne puisse pas dire qu'il ne les a pas vues
+- Matériel prêté : si le menu ou l'un de ses plats en comprend, affichage de la liste du matériel et d'un rappel des conditions de restitution
 - Bouton « Commander » :
   - personne connectée : redirection vers la page de commande, avec le menu déjà sélectionné
   - visiteur : invitation à se connecter ou à créer un compte avant d'accéder à la commande
+  - menu épuisé (stock à 0) : bouton désactivé, avec une mention indiquant que le menu est épuisé
 
 #### Création de compte
 
 - Informations demandées : nom, prénom, numéro de GSM, adresse mail, adresse postale, mot de passe sécurisé
+- Le mot de passe est saisi deux fois, à l'identique
 - Attribution automatique du rôle « utilisateur »
-- Envoi automatique d'un mail de bienvenue
+- Envoi automatique d'un mail de bienvenue, contenant un lien de confirmation de l'adresse mail : le compte n'est activé qu'après un clic sur ce lien
+- Même message affiché après l'envoi du formulaire, que l'adresse mail soit nouvelle ou déjà utilisée
+- Adresse déjà utilisée : aucun compte n'est créé, et un mail informe son titulaire qu'il possède déjà un compte et l'invite à se connecter ou à réinitialiser son mot de passe
 
 #### Connexion et mot de passe oublié
 
 - Connexion avec l'adresse mail (identifiant) et le mot de passe
+- Après connexion, redirection vers l'espace correspondant au compte : utilisateur, employé ou administrateur
+- Identifiants erronés : message générique, sans indiquer si l'adresse mail existe
+- Connexion impossible tant que l'adresse mail n'a pas été confirmée, avec un message invitant à cliquer sur le lien reçu
+- Nombre de tentatives de connexion limité
+- Bouton « Déconnexion » dans la barre de navigation
 - Mot de passe oublié : le visiteur saisit son adresse mail et reçoit un lien de réinitialisation par mail
+- Même message affiché après la demande, que le compte existe ou non ; aucun mail n'est envoyé si le compte n'existe pas
+- Lien de réinitialisation à usage unique et à durée limitée
+- Nouveau mot de passe saisi deux fois, à l'identique
+- Mail informant l'utilisateur que son mot de passe a été modifié, sans le contenir
 
 #### Contact
 
 - Page accessible depuis la barre de navigation
 - Formulaire demandant un titre, une description et l'adresse mail du visiteur, pour lui répondre
+- Erreur de saisie (champ vide, adresse mail invalide) : message précis pour le champ concerné
 - Demande transmise par mail à l'entreprise
+- Message confirmant au visiteur que sa demande a été envoyée
+- Nombre d'envois limité, et protection contre les envois automatisés
 
 ### Espace utilisateur
 
