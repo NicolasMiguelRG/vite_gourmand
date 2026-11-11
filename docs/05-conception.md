@@ -69,3 +69,182 @@ L'administrateur hérite de l'ensemble des cas d'utilisation de l'espace employ�
 
 ## Diagramme de séquence
 ## Modèle conceptuel de données
+
+### Dictionnaire des données
+
+Le dictionnaire recense toutes les données que l'application doit conserver, à partir des spécifications fonctionnelles, des règles de gestion et des user stories du [cahier des charges](02-cahier-des-charges.md). Il a été épuré avant la modélisation : il ne contient que des données élémentaires, sans donnée calculée ni redondante. Les données retirées de l'annexe sont justifiées dans le tableau des corrections.
+
+**Types** : AN = alphanumérique (texte) · N = numérique · D = date · H = heure · DH = date et heure · B = booléen (oui / non).
+**Taille** : nombre maximum de caractères pour un texte ; « texte long » pour un texte libre sans limite précise ; « 2 décimales » pour un montant en euros.
+Les numéros de téléphone et les codes postaux sont de type AN : on ne fait aucun calcul avec, et ils peuvent commencer par 0.
+
+**utilisateur**
+
+| Code | Signification | Type | Taille | Valeurs possibles / contrainte | Source |
+|---|---|---|---|---|---|
+| `utilisateur_id` | Identifiant de l'utilisateur | N | — | Unique, attribué automatiquement | — |
+| `nom` | Nom de famille | AN | 50 | Obligatoire | Story 6, story 35 |
+| `prenom` | Prénom | AN | 50 | Obligatoire | Story 6, story 35 |
+| `email` | Adresse mail, utilisée pour se connecter | AN | 255 | Obligatoire, unique | RG-08 |
+| `telephone` | Numéro de GSM | AN | 20 | Obligatoire pour un client, vide pour un employé | Story 6, story 35 |
+| `adresse` | Numéro et nom de la rue | AN | 255 | Obligatoire pour un client, vide pour un employé | Story 6 |
+| `code_postal` | Code postal | AN | 5 | Obligatoire pour un client, vide pour un employé | Story 6 |
+| `ville` | Ville | AN | 100 | Obligatoire pour un client, vide pour un employé | Story 6 |
+| `mot_de_passe_hache` | Empreinte du mot de passe (jamais le mot de passe en clair) | AN | 255 | Obligatoire | RG-07, story 6 |
+| `date_confirmation` | Date et heure de confirmation de l'adresse mail | DH | — | Vide = compte non confirmé ; remplie dès la création pour un employé | RG-33 |
+| `mot_de_passe_provisoire` | Le mot de passe doit être changé à la prochaine connexion | B | — | Oui à la création et à la réactivation d'un compte employé | RG-10 bis, RG-11 |
+| `actif` | Le compte peut se connecter | B | — | Non = compte désactivé | RG-11 |
+
+**role**
+
+| Code | Signification | Type | Taille | Valeurs possibles / contrainte | Source |
+|---|---|---|---|---|---|
+| `role_id` | Identifiant du rôle | N | — | Unique, attribué automatiquement | — |
+| `libelle` | Nom du rôle | AN | 20 | utilisateur / employé / administrateur | RG-09, RG-10, RG-12 |
+
+**menu**
+
+| Code | Signification | Type | Taille | Valeurs possibles / contrainte | Source |
+|---|---|---|---|---|---|
+| `menu_id` | Identifiant du menu | N | — | Unique, attribué automatiquement | — |
+| `titre` | Titre du menu | AN | 100 | Obligatoire | Story 22 |
+| `description` | Description du menu | AN | texte long | Obligatoire | Story 22 |
+| `conditions` | Conditions du menu (délai, matériel à restituer…) | AN | texte long | Obligatoire | Story 5, story 22 |
+| `nombre_personne_minimum` | Nombre minimum de personnes | N | — | Entier ≥ 1 | RG-05, RG-13 |
+| `prix_minimum` | Prix du menu pour le nombre minimum de personnes | N | 2 décimales | > 0 | RG-05 |
+| `stock` | Nombre de commandes encore possibles | N | — | Entier ≥ 0 | RG-06 |
+| `statut` | État de publication du menu | AN | 10 | brouillon / publié / archivé | RG-29 |
+| `delai_minimum_jours` | Délai minimum entre la commande et la prestation, en jours | N | — | Entier ≥ 0 | RG-30 |
+| `description_materiel` | Description du matériel prêté avec le menu | AN | texte long | Facultatif ; vide = pas de matériel | RG-31 |
+
+**theme**
+
+| Code | Signification | Type | Taille | Valeurs possibles / contrainte | Source |
+|---|---|---|---|---|---|
+| `theme_id` | Identifiant du thème | N | — | Unique, attribué automatiquement | — |
+| `libelle` | Nom du thème | AN | 50 | Unique ; au départ : Noël, Pâques, classique, événement | RG-01, story 39 |
+
+**regime**
+
+| Code | Signification | Type | Taille | Valeurs possibles / contrainte | Source |
+|---|---|---|---|---|---|
+| `regime_id` | Identifiant du régime | N | — | Unique, attribué automatiquement | — |
+| `libelle` | Nom du régime | AN | 50 | Unique ; au départ : classique, végétarien, vegan, pescétarien, sans gluten, sans lactose | RG-02, story 39 |
+
+**plat**
+
+| Code | Signification | Type | Taille | Valeurs possibles / contrainte | Source |
+|---|---|---|---|---|---|
+| `plat_id` | Identifiant du plat | N | — | Unique, attribué automatiquement | — |
+| `nom` | Nom du plat | AN | 100 | Obligatoire | Story 26 |
+| `categorie` | Catégorie du plat | AN | 10 | entrée / plat / dessert | RG-03 |
+| `chemin_photo` | Emplacement du fichier de la photo sur le serveur | AN | 255 | Facultatif | Story 26, RG-32 |
+| `texte_alternatif_photo` | Description de la photo pour les lecteurs d'écran | AN | 255 | Obligatoire si une photo est présente | Story 26 (RGAA) |
+| `description_materiel` | Description du matériel prêté avec le plat | AN | texte long | Facultatif ; vide = pas de matériel | RG-31 |
+
+**allergene**
+
+| Code | Signification | Type | Taille | Valeurs possibles / contrainte | Source |
+|---|---|---|---|---|---|
+| `allergene_id` | Identifiant de l'allergène | N | — | Unique, attribué automatiquement | — |
+| `libelle` | Nom de l'allergène | AN | 50 | Les 14 allergènes du règlement INCO, liste fixe | RG-04 |
+
+**photo** (galerie d'un menu)
+
+| Code | Signification | Type | Taille | Valeurs possibles / contrainte | Source |
+|---|---|---|---|---|---|
+| `photo_id` | Identifiant de la photo | N | — | Unique, attribué automatiquement | — |
+| `chemin_fichier` | Emplacement du fichier sur le serveur | AN | 255 | Obligatoire | Story 25, RG-32 |
+| `texte_alternatif` | Description de la photo pour les lecteurs d'écran | AN | 255 | Obligatoire | Story 25 (RGAA) |
+| `est_principale` | Photo affichée en premier | B | — | Une seule photo principale par menu | Story 25 |
+
+**commande**
+
+| Code | Signification | Type | Taille | Valeurs possibles / contrainte | Source |
+|---|---|---|---|---|---|
+| `commande_id` | Identifiant de la commande | N | — | Unique, attribué automatiquement | — |
+| `numero_commande` | Numéro communiqué au client (mails, bon de livraison) | AN | 20 | Unique | Story 31, story 41 |
+| `date_prestation` | Date de la prestation | D | — | Respecte le délai minimum du menu | Story 13, RG-30 |
+| `heure_livraison` | Heure de livraison souhaitée | H | — | Obligatoire | Story 13 |
+| `nombre_personne` | Nombre de personnes | N | — | Entier ≥ minimum du menu | RG-13 |
+| `adresse_prestation` | Numéro et nom de la rue de la prestation | AN | 255 | Obligatoire | Story 13 |
+| `code_postal_prestation` | Code postal de la prestation | AN | 5 | Obligatoire | Story 13 |
+| `ville_prestation` | Ville de la prestation | AN | 100 | Obligatoire | Story 13, RG-16 |
+| `prix_menu` | Prix du menu validé par le client | N | 2 décimales | Figé à la validation | RG-14, RG-35 |
+| `montant_reduction` | Montant de la réduction accordée | N | 2 décimales | 0 si aucune réduction ; figé | RG-15, RG-35 |
+| `prix_livraison` | Frais de livraison | N | 2 décimales | 0 dans Bordeaux ; figé | RG-16, RG-35 |
+| `description_materiel_menu` | Matériel prêté avec le menu au moment de la commande | AN | texte long | Facultatif ; figé | RG-31, RG-35 |
+
+**plat_commande** (copie des plats à la validation de la commande)
+
+| Code | Signification | Type | Taille | Valeurs possibles / contrainte | Source |
+|---|---|---|---|---|---|
+| `plat_commande_id` | Identifiant du plat commandé | N | — | Unique, attribué automatiquement | — |
+| `nom` | Nom du plat au moment de la commande | AN | 100 | Obligatoire | RG-35 |
+| `categorie` | Catégorie du plat au moment de la commande | AN | 10 | entrée / plat / dessert | RG-03, RG-35 |
+| `description_materiel` | Matériel prêté avec le plat au moment de la commande | AN | texte long | Facultatif | RG-31, RG-35 |
+
+**changement_statut** (historique des statuts d'une commande)
+
+| Code | Signification | Type | Taille | Valeurs possibles / contrainte | Source |
+|---|---|---|---|---|---|
+| `changement_statut_id` | Identifiant du changement | N | — | Unique, attribué automatiquement | — |
+| `statut` | Nouveau statut de la commande | AN | 40 | en attente / accepté / en préparation / en cours de livraison / livré / en attente du retour de matériel / terminée / annulée | RG-19, RG-20, RG-36 |
+| `date_heure` | Date et heure du changement | DH | — | Obligatoire | RG-21 |
+
+**contact** (contact du client par un employé)
+
+| Code | Signification | Type | Taille | Valeurs possibles / contrainte | Source |
+|---|---|---|---|---|---|
+| `contact_id` | Identifiant du contact | N | — | Unique, attribué automatiquement | — |
+| `objet` | Raison du contact | AN | 15 | modification / annulation | RG-23 |
+| `mode` | Moyen de contact | AN | 5 | GSM / mail | RG-23 |
+| `motif` | Motif de la modification ou de l'annulation | AN | texte long | Obligatoire | RG-23 |
+| `date_heure` | Date et heure du contact | DH | — | Obligatoire | RG-23 |
+| `accord_client` | Le client a donné son accord | B | — | Obligatoire pour une modification, vide pour une annulation | RG-23 |
+
+**modification** (modification enregistrée d'une commande)
+
+| Code | Signification | Type | Taille | Valeurs possibles / contrainte | Source |
+|---|---|---|---|---|---|
+| `modification_id` | Identifiant de la modification | N | — | Unique, attribué automatiquement | — |
+| `date_heure` | Date et heure de la modification | DH | — | Obligatoire | Story 17, story 32 |
+
+**avis**
+
+| Code | Signification | Type | Taille | Valeurs possibles / contrainte | Source |
+|---|---|---|---|---|---|
+| `avis_id` | Identifiant de l'avis | N | — | Unique, attribué automatiquement | — |
+| `note` | Note donnée par le client | N | — | Entier de 1 à 5 | RG-27 |
+| `commentaire` | Commentaire du client | AN | texte long | Obligatoire | RG-27 |
+| `date_depot` | Date et heure d'envoi de l'avis | DH | — | Obligatoire | Story 34 |
+
+**decision_moderation**
+
+| Code | Signification | Type | Taille | Valeurs possibles / contrainte | Source |
+|---|---|---|---|---|---|
+| `decision_moderation_id` | Identifiant de la décision | N | — | Unique, attribué automatiquement | — |
+| `decision` | Décision prise sur l'avis | AN | 10 | validé / refusé / retiré | RG-28 |
+| `motif` | Motif du refus ou du retrait | AN | texte long | Obligatoire pour refusé et retiré, vide pour validé | RG-28 |
+| `date_heure` | Date et heure de la décision | DH | — | Obligatoire | Story 34 |
+
+**jeton** (lien personnel envoyé par mail)
+
+| Code | Signification | Type | Taille | Valeurs possibles / contrainte | Source |
+|---|---|---|---|---|---|
+| `jeton_id` | Identifiant du jeton | N | — | Unique, attribué automatiquement | — |
+| `code` | Empreinte du code contenu dans le lien (jamais le code en clair) | AN | 255 | Obligatoire | RG-33, RG-34 |
+| `type` | Usage du lien | AN | 20 | confirmation / réinitialisation | RG-33, RG-34 |
+| `date_expiration` | Date et heure au-delà desquelles le lien ne fonctionne plus | DH | — | Réinitialisation : 1 heure après l'envoi | RG-33, RG-34 |
+| `date_utilisation` | Date et heure d'utilisation du lien | DH | — | Vide = pas encore utilisé ; usage unique | RG-33, RG-34 |
+
+**horaire**
+
+| Code | Signification | Type | Taille | Valeurs possibles / contrainte | Source |
+|---|---|---|---|---|---|
+| `horaire_id` | Identifiant de la ligne d'horaires | N | — | Unique, attribué automatiquement | — |
+| `jour` | Jour de la semaine | AN | 10 | lundi à dimanche, une ligne par jour | RG-38 |
+| `ouverture_1` | Heure d'ouverture de la première plage | H | — | Vide = jour fermé | RG-38 |
+| `fermeture_1` | Heure de fermeture de la première plage | H | — | Postérieure à `ouverture_1` | RG-38 |
+| `ouverture_2` | Heure d'ouverture de la deuxième plage | H | — | Facultative | RG-38 |
+| `fermeture_2` | Heure de fermeture de la deuxième plage | H | — | Postérieure à `ouverture_2`, sans chevauchement | RG-38 |
