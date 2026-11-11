@@ -59,7 +59,7 @@ L'utilisateur est un visiteur authentifié : il hérite de l'ensemble des cas d'
 
 ![Diagramme de cas d'utilisation de l'espace employé](images/conception/cas-utilisation-employe.png)
 
-L'employé hérite des cas d'utilisation de l'espace public. À sa première connexion, il doit remplacer le mot de passe provisoire fourni par l'administrateur par un mot de passe personnel ; un mail d'alerte confirme ce changement. Il gère les menus (création, modification, suppression sous forme d'archivage) et les publie pour les rendre visibles aux clients, à condition qu'ils comportent au moins une photo. Il gère aussi les plats et leurs allergènes, les régimes et les thèmes proposés, et modifie les horaires d'ouverture. Il consulte les commandes, qu'il peut filtrer par statut ou par client, et fait évoluer leur statut ; certains changements déclenchent l'envoi d'un mail au client par le service d'envoi de mails : rappel des conditions de restitution du matériel, puis invitation à donner son avis lorsque la commande est terminée. Il ne peut modifier ou annuler la commande d'un client qu'après l'avoir contacté, en renseignant obligatoirement le mode de contact (GSM ou mail) et le motif ; le client reçoit ensuite un mail récapitulatif avec le nouveau prix, ou un mail l'informant de l'annulation et de son motif. Enfin, il modère les avis laissés par les utilisateurs, en les validant ou en les refusant, et peut retirer un avis déjà validé ; un refus ou un retrait exige un motif, communiqué au client par mail.
+L'employé hérite des cas d'utilisation de l'espace public. À sa première connexion, il doit remplacer le mot de passe provisoire fourni par l'administrateur par un mot de passe personnel ; un mail d'alerte confirme ce changement. Il gère les menus (création, modification, suppression sous forme d'archivage) et les publie pour les rendre visibles aux clients, à condition qu'ils comportent au moins une photo. Il gère aussi les plats et leurs allergènes, les régimes et les thèmes proposés, et modifie les horaires d'ouverture. Il consulte les commandes, qu'il peut filtrer par statut ou par client, imprime un bon de livraison en PDF pour le livreur lorsqu'une commande est en préparation ou en cours de livraison, et fait évoluer leur statut ; certains changements déclenchent l'envoi d'un mail au client par le service d'envoi de mails : rappel des conditions de restitution du matériel, puis invitation à donner son avis lorsque la commande est terminée. Il ne peut modifier ou annuler la commande d'un client qu'après l'avoir contacté, en renseignant obligatoirement le mode de contact (GSM ou mail) et le motif ; le client reçoit ensuite un mail récapitulatif avec le nouveau prix, ou un mail l'informant de l'annulation et de son motif. Enfin, il modère les avis laissés par les utilisateurs, en les validant ou en les refusant, peut retirer un avis déjà validé, et peut valider un avis refusé par erreur ; un refus ou un retrait exige un motif, communiqué au client par mail, et le client est prévenu par mail lorsque son avis refusé est finalement publié.
 
 ### Espace administrateur
 
@@ -80,7 +80,8 @@ La modélisation suit la méthode Merise, en trois temps :
 1. **Lecture** : séparer les données des traitements, formuler les règles de gestion, repérer les entités et associations candidates.
 2. **Dictionnaire des données** : décrire chaque donnée, distinguer les données élémentaires, calculées et composées, puis épurer le dictionnaire avant de modéliser.
 3. **Modélisation** : poser les entités et leurs identifiants, les relier par des associations nommées, fixer les cardinalités d'après les règles de gestion, puis vérifier la cohérence du modèle en suivant des scénarios réels.
-   Le modèle a été écrit avec [Mocodo](https://www.mocodo.net/), qui dessine le schéma à partir d'un texte. La source est versionnée dans `docs/diagrammes/mcd.mcd` : chaque modification du modèle est lisible dans l'historique Git et dans les pull requests.
+
+Le modèle a été écrit avec [Mocodo](https://www.mocodo.net/), qui dessine le schéma à partir d'un texte. La source est versionnée dans `docs/diagrammes/mcd.mcd` : chaque modification du modèle est lisible dans l'historique Git et dans les pull requests.
 
 ### Dictionnaire des données
 
@@ -305,6 +306,7 @@ Autres changements : `quantite_restante` est renommé `stock`, le mot employé p
 - `MENU (1,N) — propose — (0,N) PLAT` : un menu contient au moins un plat ; un plat peut appartenir à plusieurs menus (RG-03).
 - `PLAT (0,N) — contient — (0,N) ALLERGENE` : un plat peut contenir plusieurs allergènes (RG-04).
 - `HORAIRE` reste isolée : les horaires sont un paramétrage de l'entreprise, et aucune règle ne les relie à une autre donnée.
+
 Il n'y a pas d'entité « employé » ni « administrateur » : ce sont des utilisateurs dont le rôle diffère.
  
 ### Enrichissements
@@ -325,6 +327,7 @@ Pour chaque règle de gestion, la question posée est : que doit retenir l'appli
 | E10 | RG-33, RG-34 | Entité `JETON` ; `UTILISATEUR (0,N) — recoit_jeton — (1,1) JETON` | Liens personnels envoyés par mail (confirmation de l'adresse, réinitialisation du mot de passe), avec leur empreinte, leur expiration et leur date d'utilisation (usage unique) |
 | E11 | RG-10 bis, RG-11, RG-33 | Attributs `date_confirmation`, `mot_de_passe_provisoire`, `actif` de `utilisateur` | Compte confirmé ou non, mot de passe provisoire à changer, compte actif ou désactivé |
 
+### Règles non exprimables par le modèle
 Certaines règles ne peuvent pas être imposées par les cardinalités. Elles seront vérifiées par l'application :
  
 - le régime « classique » ne se combine avec aucun autre ;

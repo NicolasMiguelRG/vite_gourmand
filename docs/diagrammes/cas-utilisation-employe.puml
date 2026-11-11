@@ -22,11 +22,15 @@ rectangle "Vite & Gourmand - Espace employé" {
     usecase "Annuler la commande d'un client" as UC10
     usecase "Modérer les avis" as UC12
     usecase "Retirer un avis validé" as UC15
+    usecase "Revalider un avis refusé" as UC16
+    usecase "Imprimer le bon de livraison" as UC17
 }
 
 note right of UC2 : Condition : première connexion (RG-10 bis)
 note left of UC13 : Au moins une photo (RG-29)
 note right of UC15 : Condition : avis déjà validé ;\nmotif obligatoire (RG-28)
+note right of UC16 : Condition : avis refusé ;\ncorrection d'une erreur (RG-28)
+note right of UC17 : Condition : commande « en préparation »\nou « en cours de livraison »
 
 N1 .. Visiteur
 Employé --> UC1
@@ -46,12 +50,15 @@ UC6 <.. UC7 : <<extend>>
 UC12 <.. UC15 : <<extend>>
 UC9 ..> UC11 : <<include>>
 UC10 ..> UC11 : <<include>>
+UC12 <.. UC16 : <<extend>>
+UC6 <.. UC17 : <<extend>>
 
 UC2 --> Mail : alerte de modification du mot de passe
 UC8 --> Mail : retour de matériel (RG-24)\ninvitation à donner un avis (RG-25)
 UC9 --> Mail : récapitulatif avec le nouveau prix
 UC10 --> Mail : annulation et motif
 UC12 --> Mail : refus ou retrait avec motif (RG-28)
+UC16 --> Mail : publication de l'avis revalidé
 
 Employé --|> Visiteur
 
