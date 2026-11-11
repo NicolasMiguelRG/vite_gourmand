@@ -342,3 +342,45 @@ Certaines règles ne peuvent pas être imposées par les cardinalités. Elles se
 ### Hors périmètre
  
 Les évolutions suivantes ne sont pas demandées et ne sont pas modélisées : disponibilité d'un menu par période, historique des modifications des horaires, détail des valeurs avant et après une modification de commande, historique des désactivations de comptes employés, livraison hors de France.
+
+## Données de la base non relationnelle
+
+### Données stockées
+
+L'expression du besoin impose que les statistiques de l'administrateur proviennent d'une base de données non relationnelle (p. 9). Cette base contient **un document par commande**, qui ne reprend que les informations utiles aux deux statistiques : le nombre de commandes par menu (RG-39) et le chiffre d'affaires par menu (RG-40).
+
+| Champ | Signification | Utilisé pour |
+|---|---|---|
+| `commande_id` | Identifiant de la commande dans la base relationnelle | Retrouver le document à mettre à jour |
+| `menu_id` | Identifiant du menu commandé | Regrouper les commandes par menu, filtrer par menu |
+| `menu_titre` | Titre du menu au moment de la commande | Libellé des barres du graphique et des lignes du tableau |
+| `date_prestation` | Date de la prestation | Filtrer par période |
+| `statut` | Statut actuel de la commande | Écarter les commandes annulées ; distinguer le chiffre d'affaires réalisé et prévisionnel |
+| `prix_menu` | Prix du menu validé par le client | Chiffre d'affaires |
+| `montant_reduction` | Réduction accordée | Chiffre d'affaires (prix du menu après réduction) |
+| `prix_livraison` | Frais de livraison | Ligne séparée du tableau |
+
+Exemple de document :
+
+```json
+{
+  "commande_id": 42,
+  "menu_id": 3,
+  "menu_titre": "Menu de Noël",
+  "date_prestation": "2026-12-24",
+  "statut": "accepté",
+  "prix_menu": 675.00,
+  "montant_reduction": 67.50,
+  "prix_livraison": 0.00
+}
+```
+
+Le document est créé à la validation d'une commande, puis mis à jour à chaque changement de statut et à chaque modification de la commande.
+
+### Justification
+
+- **Exigence du client** : les statistiques doivent provenir d'une base non relationnelle.
+- **Lecture rapide** : chaque document contient déjà tout ce qu'une statistique affiche. Le calcul ne demande aucune jointure entre la commande, son historique de statuts et le menu.
+- **Copie volontaire** : le statut actuel et le titre du menu sont recopiés, alors que le modèle relationnel ne les stocke pas en double. Ce n'est pas une redondance du modèle : la base relationnelle reste la seule source de vérité, et la base non relationnelle n'en est qu'une copie destinée à la lecture, mise à jour par l'application.
+- **Minimisation des données (RGPD)** : aucune donnée personnelle n'est copiée. Le document ne contient ni le nom du client, ni son adresse, ni ses coordonnées : les statistiques n'en ont pas besoin.
+- **Date de prestation** : le filtre par période porte sur la date de la prestation, car un chiffre d'affaires est réalisé lorsque la prestation est livrée (RG-40) ; la même date est utilisée pour les deux statistiques, pour qu'elles restent comparables (interprétation).
