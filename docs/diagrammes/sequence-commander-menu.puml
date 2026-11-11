@@ -1,0 +1,68 @@
+@startuml sequence-commander-menu 
+title Commander un menu 
+
+actor Utilisateur
+participant "Front-end" as Front 
+participant "Back-end" as Back 
+database "Base de données\nrelationnelle" as BDD 
+database "Base NoSQL" as NoSQL 
+participant "API d'itinéraire" as API 
+participant "Service d'envoi\nde mails" as Mails 
+
+== Affichage du formulaire ==
+Utilisateur -> Front : clique sur « Commander »
+Front -> Back : demande le formulaire de commande du menu X
+Back -> Back : vérifie la session (connecté, rôle utilisateur)
+Back -> BDD : lit les informations du compte et du menu
+BDD --> Back : renvoie les données
+Back -> Back : vérifie le menu (publié RG-29, en stock RG-06)
+Back --> Front : renvoie le formulaire prérempli
+Front --> Utilisateur : affiche le formulaire
+
+== Saisie et calcul du prix == 
+
+Utilisateur -> Front : saisit le nombre de personnes, la date et l'heure
+Front -> Front : calcule le prix du menu (RG-14) et la réduction (RG-15)
+Front --> Utilisateur : affiche le prix mis à jour 
+Utilisateur -> Front : saisit l'adresse de la prestation
+Front -> Back : demande les frais de livraison
+alt adresse dans la commune de Bordeaux 
+    Back -> Back : frais = 0 € (RG-16)
+else hors de Bordeaux 
+    Back -> API : demande la distance depuis l'adresse de l'entreprise
+    alt distance trouvée 
+        API --> Back : renvoie la distance 
+        Back -> Back : frais = 5 € + 0,59 €/km (RG-16)
+    else adresse introuvable 
+        API --> Back : erreur 
+        Back --> Front : adresse introuvable 
+        Front --> Utilisateur : affiche un message, validation impossible
+        note right of Utilisateur : l'utilisateur doit corriger l'adresse
+    end
+end
+Back --> Front : renvoie les frais de livraison 
+Front --> Utilisateur : affiche le récapitulatif (menu, réduction, livraison, total, RG-18)
+
+== Validation de la commande == 
+
+Utilisateur -> Front : coche les CGV et clique sur « Valider »
+Front -> Back : envoie la commande (menu, nombre de personnes, date, heure, adresse, prix affiché, CGV acceptées)
+Back -> Back : vérifie la session (connecté, rôle utilisateur)
+Back -> Back : vérifie les saisies (champs obligatoires, formats, CGV cochée)
+Back -> BDD : relit le menu (statut, stock, minimum, prix, délai)
+BDD --> Back : renvoie les données du menu
+Back -> Back : vérifie menu publié (RG-29), stock > 0 (RG-06), minimum de personnes (RG-13), date et délai (RG-30)
+Back -> Back : recalcule le prix du menu et la réduction (RG-14, RG-15)
+ref over Back, API : calcul des frais de livraison (voir « Saisie et calcul du prix »)
+Back -> BDD : enregistre la commande (transaction)
+note right of Back : commande et prix figés (RG-35), copie des plats et allergènes,\nstatut « en attente » (RG-19), stock −1 (RG-06)
+BDD --> Back : commande enregistrée
+
+== Confirmation == 
+
+Back -> NoSQL : copie la commande pour les statistiques 
+Back -> Mails : envoie le mail de confirmation récapitulatif
+Back --> Front : commande enregistrée (numéro de commande)
+Front --> Utilisateur : affiche le message de confirmation
+
+@enduml 

@@ -69,6 +69,88 @@ L'administrateur hérite de l'ensemble des cas d'utilisation de l'espace employ�
 
 ## Diagramme de séquence
 
+### Démarche
+ 
+Le diagramme de cas d'utilisation décrit **ce que** le système permet de faire ; le diagramme de séquence décrit **comment** une de ces actions se déroule, dans le temps, entre les différentes parties de l'application. Il complète donc la section précédente plutôt qu'il ne la répète.
+ 
+La construction s'est faite en quatre temps : choix du cas d'utilisation à détailler, recensement des participants, écriture du scénario nominal du début à la fin, puis ajout des cas alternatifs jugés utiles.
+ 
+### Choix du cas d'utilisation
+ 
+Le cas retenu est **« Commander un menu »**, pour trois raisons :
+ 
+- **C'est le cœur du métier.** Toutes les autres fonctionnalités (consulter les menus, les gérer, modérer les avis, consulter les statistiques) existent pour permettre la commande ou en découlent. Sans elle, l'application n'a plus d'objet.
+- **C'est le cas qui met en jeu le plus de participants.** Il sollicite le front-end, le back-end, la base de données relationnelle, la base non relationnelle, l'API de calcul d'itinéraire et le service d'envoi de mails. Un seul diagramme suffit donc à montrer comment l'ensemble des composants de l'application communiquent entre eux.
+- **C'est là que se concentrent les règles de gestion et les contrôles de sécurité.** Calcul du prix (RG-14), réduction (RG-15), frais de livraison (RG-16), nombre minimum de personnes (RG-13), délai de commande (RG-30), stock (RG-06), figement des données (RG-35), statut initial (RG-19) : toutes sont vérifiées par le serveur au cours de ce seul parcours.
+Deux autres cas avaient été envisagés : « Se connecter », qui concentre les mécanismes de sécurité du compte, et « Faire évoluer le statut d'une commande », qui illustre le travail de l'employé. Ils n'ont pas été retenus : leurs échanges sont plus simples et leurs participants moins nombreux. Ils pourront faire l'objet de diagrammes complémentaires si le besoin s'en fait sentir.
+ 
+### Participants
+ 
+| Participant | Rôle dans le diagramme |
+|---|---|
+| Utilisateur | Acteur principal, client connecté qui passe la commande |
+| Front-end | Partie de l'application exécutée dans le navigateur : affichage, saisie, calculs d'affichage |
+| Back-end | Partie exécutée sur le serveur : vérifications, calculs faisant foi, accès aux données |
+| Base de données relationnelle | Source de vérité : comptes, menus, plats, commandes, historiques |
+| Base NoSQL | Copie des commandes destinée à la lecture pour les statistiques de l'administrateur |
+| API d'itinéraire | Service externe qui fournit la distance par la route (RG-16) |
+| Service d'envoi de mails | Service externe sollicité par le système, jamais déclencheur |
+ 
+Les participants sont nommés de façon générique : aucune technologie n'apparaît dans le diagramme. Les choix techniques font l'objet d'une étape ultérieure du projet, et le déroulement décrit ici reste valable quelle que soit la pile retenue.
+ 
+### Conventions de lecture
+ 
+- Le temps s'écoule de haut en bas ; chaque participant possède une ligne de vie verticale.
+- Une **flèche pleine** représente un message (une demande, une action déclenchée chez un autre participant).
+- Une **flèche en pointillés** représente une réponse à un message précédent.
+- Une flèche qui **revient sur son émetteur** représente une action qu'il effectue seul : vérifier, calculer.
+- Un cadre **`alt`** représente une alternative : seule une des branches se déroule.
+- Un cadre **`ref`** renvoie à une séquence déjà décrite plus haut, pour éviter de la redessiner.
+- Les **notes** précisent ce que le dessin seul ne peut pas exprimer.
+- Les règles de gestion concernées sont citées directement dans le texte des messages, pour assurer la traçabilité avec le cahier des charges.
+### Schéma
+ 
+![Diagramme de séquence du cas d'utilisation « Commander un menu », en quatre étapes : affichage du formulaire prérempli, saisie et calcul du prix, validation de la commande, confirmation. Les échanges relient l'utilisateur, le front-end, le back-end, la base de données relationnelle, la base NoSQL, l'API d'itinéraire et le service d'envoi de mails.](images/conception/sequence-commander-menu.png)
+ 
+Source : `docs/diagrammes/sequence-commander-menu.puml`
+ 
+### Déroulement
+ 
+**Affichage du formulaire.** L'utilisateur clique sur « Commander » depuis la vue détaillée d'un menu. Le front-end demande le formulaire au back-end, qui vérifie d'abord la session : l'identité est lue dans la session côté serveur, jamais dans les données envoyées par le navigateur. Il lit ensuite en base les informations du compte et celles du menu, puis vérifie que le menu est bien publié (RG-29) et qu'il reste du stock (RG-06). Le formulaire est renvoyé prérempli avec les coordonnées du client.
+ 
+**Saisie et calcul du prix.** Lorsque l'utilisateur saisit le nombre de personnes, le front-end calcule seul le prix (RG-14) et la réduction éventuelle (RG-15) à partir des données qu'il a déjà reçues : le montant affiché se met à jour sans aller-retour avec le serveur. La saisie de l'adresse, en revanche, déclenche une demande au back-end. Si l'adresse se trouve dans la commune de Bordeaux, la livraison est gratuite et aucun appel externe n'est nécessaire (RG-16). Sinon, le back-end interroge l'API d'itinéraire pour obtenir la distance par la route, puis calcule les frais. Le récapitulatif complet est alors affiché (RG-18).
+ 
+**Validation de la commande.** L'utilisateur accepte les conditions générales de vente et valide. Le back-end revérifie tout : la session, les saisies, puis les données du menu qu'il relit en base, car elles ont pu changer depuis l'ouverture du formulaire — un autre client a pu prendre le dernier menu disponible, ou l'employé a pu l'archiver. Il contrôle le statut du menu (RG-29), le stock (RG-06), le nombre minimum de personnes (RG-13) et le respect du délai de commande (RG-30), puis recalcule lui-même le prix, la réduction et les frais de livraison. Le montant affiché par le navigateur n'est jamais utilisé tel quel. L'enregistrement se fait enfin en une seule **transaction** : la commande et ses prix figés (RG-35), la copie des plats et de leurs allergènes, le statut initial « en attente » (RG-19) et la décrémentation du stock (RG-06) sont écrits ensemble, ou pas du tout. Cette garantie évite qu'une panne laisse une commande sans statut ou un stock décrémenté sans commande.
+ 
+**Confirmation.** La commande étant enregistrée, le back-end en copie les données dans la base non relationnelle, qui alimente les statistiques de l'administrateur. Cette écriture a lieu **après** la transaction : elle a besoin de l'identifiant créé par celle-ci, et une transaction échouée ne doit pas laisser de commande fantôme dans les statistiques. Le mail de confirmation est envoyé, puis le numéro de commande remonte jusqu'à l'utilisateur, qui voit son message de confirmation.
+ 
+### Choix de conception
+ 
+**Calcul du prix côté navigateur, vérification côté serveur.** Le front-end calcule le prix pour l'affichage, ce qui rend le formulaire instantané et évite une requête à chaque changement du nombre de personnes. La sécurité est assurée par le recalcul du serveur à la validation : si les deux montants diffèrent, la commande n'est pas enregistrée et le nouveau prix doit être validé. La contrepartie assumée est que la formule de calcul existe à deux endroits.
+ 
+**Appel de l'API d'itinéraire depuis le serveur.** Une clé d'API placée dans le code du navigateur serait lisible par n'importe quel visiteur, et pourrait être réutilisée au détriment de l'entreprise. Par ailleurs, une distance transmise par le navigateur pourrait être falsifiée pour réduire les frais : le serveur doit obtenir lui-même la valeur sur laquelle il fonde son calcul.
+ 
+**Appel de l'API seulement hors de Bordeaux.** La livraison étant gratuite dans la commune (RG-16), la distance y est inutile. Ce choix réduit le nombre d'appels — donc le quota consommé et le coût éventuel —, accélère la réponse, et permet aux clients bordelais de commander même si l'API est indisponible.
+ 
+**Les échecs de notification n'annulent pas la commande.** Si l'envoi du mail ou l'écriture dans la base non relationnelle échoue, la commande reste valide : elle est enregistrée, visible dans l'espace du client et confirmée à l'écran. L'erreur est inscrite au journal des erreurs. La base relationnelle restant la source de vérité, le document manquant pourra être recopié ultérieurement.
+ 
+### Cas alternatifs non représentés
+ 
+Pour rester lisible, le diagramme ne représente que le scénario nominal et le cas d'une adresse dont la distance ne peut pas être calculée. Les autres situations d'erreur sont décrites ici :
+ 
+| Situation | Comportement attendu |
+|---|---|
+| Utilisateur non connecté | Redirection vers la connexion ou la création de compte |
+| Menu inexistant, non publié ou épuisé | Message d'information ; le formulaire n'est pas affiché ou la validation est refusée (RG-06, RG-29) |
+| Saisie invalide (minimum non atteint, date trop proche, champ vide) | Message précis sur le champ concerné ; les autres champs restent remplis (RG-13, RG-30) |
+| Prix recalculé différent du prix affiché | La commande n'est pas enregistrée ; le nouveau prix est affiché et doit être validé à nouveau |
+| Échec de l'envoi du mail ou de l'écriture non relationnelle | La commande est maintenue ; l'erreur est enregistrée dans le journal des erreurs |
+ 
+### Point à préciser lors du choix des technologies
+ 
+Le diagramme distingue les adresses situées dans la commune de Bordeaux des autres, sans préciser comment cette appartenance est établie. Se fier au champ « ville » saisi par le client serait insuffisant, celui-ci pouvant être modifié pour obtenir une livraison gratuite. Une vérification fondée sur le géocodage de l'adresse sera retenue si l'API choisie le permet.
+ 
+
 ## Modèle conceptuel de données
 
 ### Démarche
