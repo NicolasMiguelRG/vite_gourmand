@@ -1,0 +1,59 @@
+:
+:
+:
+enregistre, 0N UTILISATEUR, 01 MODIFICATION
+MODIFICATION: modification_id, date_heure
+est_modifiee, 0N COMMANDE, 11 MODIFICATION
+PLAT_COMMANDE: plat_commande_id, nom, categorie, description_materiel
+contient_fige, 0N PLAT_COMMANDE, 0N ALLERGENE
+ALLERGENE: allergene_id, libelle
+contient, 0N PLAT, 0N ALLERGENE
+PLAT: plat_id, nom, categorie, chemin_photo, texte_alternatif_photo, description_materiel
+
+ROLE: role_id, libelle
+possede, 11 UTILISATEUR, 0N ROLE
+:
+effectue, 0N UTILISATEUR, 01 CHANGEMENT_STATUT
+CHANGEMENT_STATUT: changement_statut_id, statut, date_heure
+subit, 1N COMMANDE, 11 CHANGEMENT_STATUT
+compose, 1N COMMANDE, 11 PLAT_COMMANDE
+:
+:
+propose, 1N MENU, 0N PLAT
+:
+
+JETON: jeton_id, code, type, date_expiration, date_utilisation
+recoit_jeton, 0N UTILISATEUR, 11 JETON
+UTILISATEUR: utilisateur_id, nom, prenom, email, telephone, adresse, code_postal, ville, mot_de_passe_hache, date_confirmation, mot_de_passe_provisoire, actif
+:
+passe, 0N UTILISATEUR, 11 COMMANDE
+:
+COMMANDE: commande_id, numero_commande, date_prestation, heure_livraison, nombre_personne, adresse_prestation, code_postal_prestation, ville_prestation, prix_menu, montant_reduction, prix_livraison, description_materiel_menu
+concerne_menu, 11 COMMANDE, 0N MENU
+MENU: menu_id, titre, description, conditions, nombre_personne_minimum, prix_minimum, stock, statut, delai_minimum_jours, description_materiel
+adapte, 1N MENU, 0N REGIME
+REGIME: regime_id, libelle
+
+:
+:
+:
+contacte, 0N UTILISATEUR, 11 CONTACT
+CONTACT: contact_id, objet, mode, motif, date_heure, accord_client
+donne_lieu, 0N COMMANDE, 11 CONTACT
+evalue, 01 COMMANDE, 11 AVIS
+appartient_theme, 11 MENU, 0N THEME
+:
+illustre, 0N MENU, 11 PHOTO
+:
+
+HORAIRE: horaire_id, jour, ouverture_1, fermeture_1, ouverture_2, fermeture_2
+:
+modere, 0N UTILISATEUR, 11 DECISION_MODERATION
+DECISION_MODERATION: decision_moderation_id, decision, motif, date_heure
+recoit, 0N AVIS, 11 DECISION_MODERATION
+:
+AVIS: avis_id, note, commentaire, date_depot
+:
+THEME: theme_id, libelle
+:
+PHOTO: photo_id, chemin_fichier, texte_alternatif, est_principale
