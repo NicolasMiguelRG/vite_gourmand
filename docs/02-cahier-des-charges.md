@@ -379,6 +379,9 @@ que j'ai faits lorsque l'expression du besoin était incomplète ou ambiguë. Il
 - Paiement en ligne : l'expression du besoin n'en fait pas mention. La commande est validée sans paiement dans l'application ; le règlement se fait en dehors. Une évolution possible serait d'intégrer un prestataire de paiement spécialisé, pour ne jamais stocker de données bancaires.
 - Disponibilité d'un menu par période (par exemple du 1er au 24 décembre) : non demandée. L'équipe publie et archive les menus à la main (RG-29).
 - Livraison hors de France : non demandée ; l'adresse ne comporte pas de pays (minimisation des données).
+- Indicateur du nombre de commandes en attente dans l'espace employé.
+- Rôle « livreur », avec un accès limité aux commandes à livrer.
+- Renvoi automatique des mails dont l'envoi a échoué (file d'attente).
 
 ## User stories
 
