@@ -234,4 +234,56 @@ Côté sécurité, Dompdf est configuré pour ne charger aucune ressource extern
 | Gotenberg | Utilise un vrai navigateur (Chromium) dans un conteneur Docker : rendu identique à l'écran, Bootstrap compris. Mais c'est un service lourd de plus à héberger en local, en préproduction et en production, pour un document de quelques lignes. C'est l'évolution possible si le client demande un jour des documents plus riches, comme une carte des menus illustrée. |
 | KnpSnappyBundle (wkhtmltopdf) | Ancienne solution courante avec Symfony, mais wkhtmltopdf a été abandonné en janvier 2023 et ne reçoit plus de correctifs de sécurité. |
 | Page HTML prévue pour l'impression (`@media print`) | La plus simple, mais elle ne produit pas de PDF, alors que la story demande un bon de livraison en PDF. |
-## Déploiement
+
+## Hébergement et environnements
+
+### alwaysdata
+
+La préproduction et la production sont hébergées chez **alwaysdata**, hébergeur français dont les serveurs se trouvent en région parisienne, avec l'offre **Small** (50 Go de disque, 1 Go de mémoire, 6 € HT par mois ou 60 € HT par an). Un même compte accepte un nombre illimité de sites et de bases de données : **la préproduction et la production sont deux sites distincts**, chacun avec sa propre base.
+
+**Pourquoi cet hébergeur :**
+- **hébergement géré** : la sécurité et les mises à jour du serveur sont assurées par l'hébergeur, ce qui réduit les risques et la maintenance pour un client de cette taille ;
+- **données en France**, ce qui simplifie la conformité au RGPD ;
+- **coût faible et prévisible** : environ 65 à 72 € TTC pour maintenir le site en ligne jusqu'à l'été 2027 ;
+- **sauvegardes quotidiennes** conservées 30 jours, accès SSH, support par ticket ;
+- **compatibilité vérifiée** : PHP 8.4, MariaDB 11.8, et l'extension PHP `mongodb` compilée et testée sur le compte avant de valider le choix ;
+- **plateforme que je connais** : je l'ai déjà utilisée pour déployer un site en SSH ;
+- **évolution sans réécriture** : si l'activité grandit, une offre supérieure s'active en un clic.
+
+Dans le cadre du projet, l'hébergement est souscrit sur mon compte de prestataire. Pour un vrai client, l'abonnement serait ouvert à son nom : c'est lui qui paie et qui garde l'accès s'il change de prestataire.
+
+### Trois environnements
+
+| | Local | Préproduction | Production |
+|---|---|---|---|
+| Rôle | Développer et tester | Valider dans les conditions réelles | Site utilisé par les clients |
+| Emplacement | Mon poste, avec Docker | alwaysdata (site 1) | alwaysdata (site 2) |
+| Code | Branche de travail (issue de `dev`) | Branche `dev` | Branche `main` |
+| PHP | 8.4 | 8.4 | 8.4 |
+| Base relationnelle | MariaDB 11.8 (conteneur) | MariaDB 11.8 | MariaDB 11.8 |
+| Base non relationnelle | MongoDB (conteneur) | MongoDB Atlas | MongoDB Atlas |
+| Mails | Mailpit | Brevo | Brevo |
+
+Les versions sont identiques dans les trois environnements : ce qui fonctionne sur mon poste fonctionne de la même façon en ligne. Seuls les services qui ne doivent pas toucher au réel changent en local, comme les mails, qui sont interceptés par Mailpit. La configuration de l'environnement local est détaillée dans `04-environnement.md`.
+
+### Déploiement continu
+
+Le déploiement est automatisé par une **pipeline GitHub Actions** :
+- une fusion dans `dev` lance les tests puis déploie en **préproduction** ;
+- une fusion de `dev` dans `main` lance les tests puis déploie en **production**.
+
+La pipeline se connecte à alwaysdata en SSH avec une clé dédiée, conservée dans les secrets du dépôt GitHub (aucun mot de passe dans le code), puis met à jour le code, installe les dépendances et vide le cache de Symfony. Sa mise en place fait l'objet de la carte #6, et la procédure complète est décrite dans `07-deploiement.md`.
+
+### Alternatives écartées
+
+Comparaison faite en novembre 2026, sur la base d'un site en ligne jusqu'à l'été 2027 :
+
+| Alternative | Raison |
+|---|---|
+| Clever Cloud | PaaS français de qualité, qui propose MySQL 8.4. Mais la préproduction et la production, avec leurs bases et le stockage des photos, coûtent environ 17 € HT par mois, soit plus du double d'alwaysdata. |
+| Serveur privé virtuel (VPS) avec Docker | Très formateur et entièrement personnalisable, mais l'administration et la sécurité du serveur seraient entièrement à ma charge, au détriment du temps de développement. Les petites offres étaient aussi indisponibles au moment du choix (OVHcloud, Hetzner). Le VPS reste une évolution possible si les besoins grandissent. |
+| Render | Offre gratuite, mais l'application se met en veille après 15 minutes sans visite et les fichiers envoyés (photos des menus) sont perdus à chaque redémarrage. |
+| Heroku, Fly.io | Plus d'offre gratuite. |
+| Upsun (partenaire de Symfony) | Pensé pour Symfony, mais trop cher pour un projet de cette taille. |
+| Railway | Facturation à l'usage, difficile à prévoir, et société américaine. |
+| Azure for Students | Réservé aux usages académiques non commerciaux : ne convient pas à l'hébergement d'un client. |
