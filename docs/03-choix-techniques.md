@@ -212,4 +212,26 @@ Les mails (bienvenue, réinitialisation du mot de passe, confirmation de command
 |---|---|
 | Mailjet | Offre gratuite plus limitée (200 mails par jour). |
 | Gmail en SMTP | Pas conçu pour un site web : risque élevé de classement en indésirables. |
+
+## Génération de PDF
+
+### Dompdf
+
+Le bon de livraison (story 41, carte #68) est généré en PDF avec **Dompdf**, une bibliothèque PHP installée avec Composer.
+
+Le fonctionnement est simple : le contrôleur fabrique le HTML du bon avec un template Twig, Dompdf le transforme en PDF, et le navigateur l'ouvre dans son lecteur PDF. L'employé n'a plus qu'à l'imprimer pour le livreur. Un site web ne peut pas envoyer un document directement à l'imprimante : le navigateur ouvre toujours sa fenêtre d'impression, pour des raisons de sécurité.
+
+**Pourquoi Dompdf :** c'est un outil proportionné au besoin. Le bon de livraison ne contient que quelques informations (numéro de commande, nom et prénom du client, GSM, adresse et heure de livraison) : un tableau suffit. Dompdf s'installe comme une simple dépendance et tourne dans l'application, sans aucun service supplémentaire à héberger.
+
+**Ses limites, connues et acceptées :** Dompdf n'est pas un navigateur. Il gère la plupart du CSS 2.1 et quelques propriétés plus récentes, mais pas les mises en page en flexbox ou en grille, ni le JavaScript. Le template du bon n'utilise donc pas Bootstrap, mais une feuille de style simple (tableau, marges, largeurs fixes). La police de la charte graphique peut être déclarée avec `@font-face`.
+
+Côté sécurité, Dompdf est configuré pour ne charger aucune ressource externe (images ou feuilles de style hébergées ailleurs), et la dépendance est tenue à jour.
+
+### Alternatives écartées
+
+| Alternative | Raison |
+|---|---|
+| Gotenberg | Utilise un vrai navigateur (Chromium) dans un conteneur Docker : rendu identique à l'écran, Bootstrap compris. Mais c'est un service lourd de plus à héberger en local, en préproduction et en production, pour un document de quelques lignes. C'est l'évolution possible si le client demande un jour des documents plus riches, comme une carte des menus illustrée. |
+| KnpSnappyBundle (wkhtmltopdf) | Ancienne solution courante avec Symfony, mais wkhtmltopdf a été abandonné en janvier 2023 et ne reçoit plus de correctifs de sécurité. |
+| Page HTML prévue pour l'impression (`@media print`) | La plus simple, mais elle ne produit pas de PDF, alors que la story demande un bon de livraison en PDF. |
 ## Déploiement
