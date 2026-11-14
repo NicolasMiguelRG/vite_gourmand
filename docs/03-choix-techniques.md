@@ -10,7 +10,7 @@ J'ai fait ces choix comme pour un vrai client, à partir des critères suivants 
 - **Évolution sans réécriture** : si l'activité grandit, on passe à une offre ou à une configuration supérieure, sans modifier le code.
 - **Maintenance** : des versions maintenues longtemps (LTS, *Long Term Support*), pour que l'application reste sécurisée après sa livraison.
 - **Données en France** : des prestataires français dès que possible, pour simplifier la conformité au RGPD.
-- **Maîtrise** : des technologies que je sais expliquer et maintenir seul dans le délai du projet. Une seule nouveauté est assumée : Stimulus (voir [Front-end](#front-end)).
+- **Maîtrise** : des technologies que je sais expliquer et maintenir seul dans le délai du projet. Une seule nouvelle technologie de développement est assumée : Stimulus (voir [Front-end](#front-end)).
 - **Coût** : faible et prévisible.
 
 Les versions, les durées de maintenance et les prix cités dans ce document ont été vérifiés en novembre 2026.
@@ -264,7 +264,7 @@ Dans le cadre du projet, l'hébergement est souscrit sur mon compte de prestatai
 | Base non relationnelle | MongoDB (conteneur) | MongoDB Atlas | MongoDB Atlas |
 | Mails | Mailpit | Brevo | Brevo |
 
-Les versions sont identiques dans les trois environnements : ce qui fonctionne sur mon poste fonctionne de la même façon en ligne. Seuls les services qui ne doivent pas toucher au réel changent en local, comme les mails, qui sont interceptés par Mailpit. La configuration de l'environnement local est détaillée dans `04-environnement.md`.
+Les versions de PHP et de MariaDB sont identiques dans les trois environnements, et MongoDB utilise en local la même version majeure qu'Atlas : ce qui fonctionne sur mon poste fonctionne de la même façon en ligne. Seuls les services qui ne doivent pas toucher au réel changent en local, comme les mails, qui sont interceptés par Mailpit. La configuration de l'environnement local est détaillée dans `04-environnement.md`.
 
 ### Déploiement continu
 
