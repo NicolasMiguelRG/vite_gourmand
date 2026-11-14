@@ -168,4 +168,48 @@ L'offre gratuite ne comprend ni sauvegarde ni garantie de disponibilité. Ce n'e
 | CouchDB | Également orientée documents, mais peu répandue et peu documentée avec Symfony. |
 | Firestore (Google) | Dépendance à Google Cloud et peu utilisé avec PHP. |
 | Module MongoDB d'un hébergeur | Celui étudié (Clever Cloud) proposait une version ancienne de MongoDB (4.0) ; Atlas fournit une version à jour. |
+
+## Services externes
+
+### Adresses et frais de livraison : la Géoplateforme de l'IGN
+
+Le calcul des frais de livraison (RG-16) a besoin de deux informations : savoir si l'adresse se trouve dans la commune de Bordeaux (livraison gratuite), et sinon connaître la distance par la route depuis l'entreprise. J'utilise pour cela les **API de la Géoplateforme de l'IGN**, l'Institut national de l'information géographique et forestière :
+
+| Service | Rôle dans l'application |
+|---|---|
+| **Géocodage** | Transforme l'adresse saisie en coordonnées et renvoie le **code INSEE de la commune** (`citycode`). La livraison est gratuite si ce code vaut `33063` (Bordeaux). Si l'adresse est introuvable ou trop imprécise, l'utilisateur est invité à la corriger. |
+| **Calcul d'itinéraire** | Donne la distance par la route entre l'entreprise et l'adresse de livraison. Il n'est appelé que pour les adresses hors de Bordeaux. |
+| **Autocomplétion** | Propose de vraies adresses pendant la saisie (inscription, informations personnelles, commande), ce qui limite les erreurs de frappe. |
+
+**Pourquoi le code INSEE plutôt que le champ « ville » :** le nom de ville saisi peut être faux ou falsifié pour obtenir la livraison gratuite. Le code INSEE renvoyé par le géocodage est unique et ne dépend pas de ce que l'utilisateur a tapé.
+
+**Le serveur reste maître du calcul :** même si l'autocomplétion est appelée depuis le navigateur, le serveur géocode à nouveau l'adresse et recalcule les frais à la validation de la commande, car une requête peut être envoyée sans passer par le formulaire (voir le diagramme de séquence dans `05-conception.md`).
+
+**Pourquoi ce service :**
+- c'est un **service public français** : l'adresse des clients n'est pas envoyée hors de l'Union européenne ;
+- il est **gratuit** et ne demande **aucune clé**, donc aucun secret à protéger ;
+- ses limites (50 requêtes par seconde pour le géocodage, 5 pour l'itinéraire) sont largement suffisantes pour un traiteur.
+
+L'ancienne « API Adresse » (`api-adresse.data.gouv.fr`), encore citée dans de nombreux tutoriels, a été transférée à l'IGN et fermée fin janvier 2026.
+
+| Alternative | Raison |
+|---|---|
+| Google Maps | Très fiable, mais clé et compte de facturation obligatoires, et adresses des clients envoyées hors de l'Union européenne. |
+| OpenRouteService | Gratuit, mais clé obligatoire et quota d'utilisation. |
+
+### Envoi de mails : Symfony Mailer
+
+Les mails (bienvenue, réinitialisation du mot de passe, confirmation de commande, etc.) sont envoyés avec le composant **Mailer** de Symfony. Le service d'envoi se choisit dans une variable d'environnement, sans changer le code :
+
+| Environnement | Service | Raison |
+|---|---|---|
+| Local | **Mailpit** | Fausse boîte de réception qui intercepte et affiche tous les mails : aucun ne part réellement, on peut tester avec de fausses adresses. |
+| Préproduction et production | **Brevo** | Société française, offre gratuite de 300 mails par jour, envoi par SMTP ou par API. La préproduction utilise le même service que la production pour tester dans les conditions réelles. |
+
+**Dimensionnement :** une commande génère en général deux mails (confirmation, puis fin de commande), jusqu'à quatre ou cinq si elle est modifiée ou annulée. Avec les inscriptions et les autres envois, 300 mails par jour couvrent plusieurs dizaines de commandes par jour, bien au-delà de l'activité d'un traiteur. Si le besoin grandit, il suffit de passer au premier forfait payant de Brevo, sans modifier le code. Un mail qui ne part pas n'annule jamais une commande : l'erreur est enregistrée dans le journal des erreurs.
+
+| Alternative | Raison |
+|---|---|
+| Mailjet | Offre gratuite plus limitée (200 mails par jour). |
+| Gmail en SMTP | Pas conçu pour un site web : risque élevé de classement en indésirables. |
 ## Déploiement
