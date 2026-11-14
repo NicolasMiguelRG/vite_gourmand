@@ -101,6 +101,38 @@ Une version LTS reste maintenue bien après la livraison au client. Symfony 7.4 
 |---|---|
 | PHP natif avec PDO (stack donnée en exemple) | Chaque ligne serait maîtrisée, mais tout serait à construire : routage, organisation du code, authentification, jetons CSRF, validation, limitation des tentatives, envoi de mails, échappement manuel de chaque donnée affichée. Avec 44 cas d'utilisation et un travail surtout le week-end, cela représentait plusieurs semaines de plus et un risque réel de faille par oubli d'un contrôle. |
 | Node.js | Un seul langage côté navigateur et côté serveur, mais je ne l'ai pratiqué que très brièvement : l'apprendre dans le délai du projet était trop risqué. |
+
 ## Base de données relationnelle
+
+### MariaDB 11.8 LTS
+
+La base de données relationnelle est **MariaDB**, en version **11.8 LTS**.
+
+J'avais d'abord choisi **MySQL**, que j'ai pratiqué en formation (phpMyAdmin, ligne de commande, Doctrine). L'hébergeur retenu, alwaysdata, ne propose que MariaDB sur son offre mutualisée : MySQL n'y est disponible que sur les serveurs privés virtuels et dédiés. Le passage à MariaDB est donc **un choix dicté par l'hébergeur** (voir [Hébergement et environnements](#hébergement-et-environnements)).
+
+Ce changement est sans conséquence pour le projet :
+- MariaDB est issu de MySQL et utilise la même syntaxe pour tout ce dont le projet a besoin : création des tables, insertions, jointures, transactions ;
+- Doctrine gère MariaDB comme MySQL ;
+- les montants sont stockés en `DECIMAL(10,2)`, un type exact, et non en `FLOAT`, un type approché qui provoquerait des erreurs d'arrondi sur les prix ;
+- le moteur InnoDB, utilisé par défaut, gère les transactions dont la commande a besoin (enregistrement en une seule opération, voir le diagramme de séquence dans `05-conception.md`).
+
+**Pourquoi la version 11.8 :** c'est la version LTS la plus récente proposée par l'hébergeur. Elle est maintenue jusqu'en juin 2028, bien au-delà de la livraison. La même version est utilisée en local, en préproduction et en production, pour que ce qui fonctionne sur mon poste fonctionne à l'identique en ligne.
+
+### Doctrine et SQL écrit à la main
+
+L'expression du besoin demande un fichier SQL de création de la base et d'intégration des données, et précise que l'utilisation de fixtures ou de migrations ne prouve pas la maîtrise du SQL (p. 11). J'ai donc organisé le travail ainsi :
+
+- **la structure de la base est écrite à la main en SQL** (`CREATE TABLE`, clés, contraintes), à partir du modèle conceptuel de données. Ce fichier est la référence ;
+- **les entités Doctrine décrivent ces tables**, sans migrations Doctrine pour créer la base : il n'y a ainsi qu'une seule source de vérité. La commande `doctrine:schema:validate` vérifie que les entités correspondent bien aux tables ;
+- **les données de départ sont insérées par un fichier SQL écrit à la main** : thèmes et régimes, quatorze allergènes, horaires, compte administrateur, menus de démonstration (dont les identifiants servent au manuel d'utilisation) ;
+- **certaines requêtes sont écrites en SQL**, avec des paramètres (requêtes préparées), là où le SQL a du sens : par exemple le filtrage des menus ou l'historique des actions d'un employé.
+
+### Alternatives écartées
+
+| Alternative | Raison |
+|---|---|
+| MySQL 8.4 LTS ou 9.7 LTS | Mon premier choix, mais non proposé par l'hébergeur retenu. Le garder aurait imposé un hébergeur deux fois plus cher ou un serveur à administrer moi-même. |
+| MariaDB 11.4 LTS | Maintenue plus longtemps (mai 2029), mais plus ancienne : la 11.8 est la dernière LTS proposée par l'hébergeur et évite une migration ultérieure. |
+| PostgreSQL | Plus strict et plus riche en fonctionnalités avancées, inutiles pour ce projet. Je ne l'ai pratiqué que très brièvement, alors que je maîtrise mieux MySQL, dont MariaDB est issu. |
 ## Base de données non relationnelle
 ## Déploiement
