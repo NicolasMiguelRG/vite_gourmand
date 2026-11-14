@@ -96,7 +96,7 @@ Deux autres cas avaient été envisagés : « Se connecter », qui concentre les
 | API d'itinéraire | Service externe qui fournit la distance par la route (RG-16) |
 | Service d'envoi de mails | Service externe sollicité par le système, jamais déclencheur |
  
-Les participants sont nommés de façon générique : aucune technologie n'apparaît dans le diagramme. Les choix techniques font l'objet d'une étape ultérieure du projet, et le déroulement décrit ici reste valable quelle que soit la pile retenue.
+Les participants sont nommés de façon générique : aucune technologie n'apparaît dans le diagramme, qui reste ainsi valable quelle que soit la pile retenue. Les technologies choisies sont présentées dans [`03-choix-techniques.md`](03-choix-techniques.md).
  
 ### Conventions de lecture
  
@@ -146,9 +146,9 @@ Pour rester lisible, le diagramme ne représente que le scénario nominal et le 
 | Prix recalculé différent du prix affiché | La commande n'est pas enregistrée ; le nouveau prix est affiché et doit être validé à nouveau |
 | Échec de l'envoi du mail ou de l'écriture non relationnelle | La commande est maintenue ; l'erreur est enregistrée dans le journal des erreurs |
  
-### Point à préciser lors du choix des technologies
- 
-Le diagramme distingue les adresses situées dans la commune de Bordeaux des autres, sans préciser comment cette appartenance est établie. Se fier au champ « ville » saisi par le client serait insuffisant, celui-ci pouvant être modifié pour obtenir une livraison gratuite. Une vérification fondée sur le géocodage de l'adresse sera retenue si l'API choisie le permet.
+### Appartenance à la commune de Bordeaux
+
+Le diagramme distingue les adresses situées dans la commune de Bordeaux des autres. Se fier au champ « ville » saisi par le client serait insuffisant, celui-ci pouvant être modifié pour obtenir une livraison gratuite. Avant le calcul des frais, le serveur géocode donc l'adresse avec l'API de la Géoplateforme de l'IGN, qui renvoie le code INSEE de la commune : la livraison est gratuite si ce code vaut `33063`. Ce choix est détaillé dans [`03-choix-techniques.md`](03-choix-techniques.md#services-externes).
  
 
 ## Modèle conceptuel de données
