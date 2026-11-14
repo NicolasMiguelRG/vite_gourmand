@@ -63,7 +63,44 @@ Les animations sont réalisées en CSS (`transition`, `@keyframes`) ou avec les 
 | React ou Vue (application séparée) + Symfony en API | Jamais pratiqués : apprendre un framework JavaScript en plus du reste était trop risqué dans le délai du projet. Une application séparée ajoute aussi une API complète à concevoir et à sécuriser, sans bénéfice pour un site de cette taille. |
 | Tailwind CSS | Nouvelle façon d'écrire le style (classes utilitaires dans le HTML) et étape de compilation supplémentaire, sans avantage décisif ici. |
 | CSS entièrement écrit à la main | Contrôle total, mais le responsive, les composants interactifs et l'accessibilité seraient entièrement à ma charge. |
+
 ## Back-end
+
+### Symfony 7.4 LTS
+
+Le back-end est développé en PHP avec le framework **Symfony**, en version **7.4 LTS**. C'est le framework que j'ai le plus pratiqué en formation, et il apporte trois choses dont le projet a besoin.
+
+**Une organisation imposée.** Symfony suit l'architecture MVC : les contrôleurs dans `src/Controller`, les entités dans `src/Entity`, les vues dans `templates/`. Le MakerBundle génère les fichiers de base (`make:entity`, `make:controller`), que je complète ensuite. N'importe quel développeur Symfony peut reprendre le projet.
+
+**Un accès aux données par objets.** L'ORM Doctrine permet de manipuler des objets PHP (`Menu`, `Commande`) plutôt que d'écrire chaque requête à la main ; il les traduit en requêtes SQL préparées. C'est un gain de code, pas de sécurité : PDO permet aussi les requêtes préparées en PHP natif. La place du SQL écrit à la main est expliquée dans la section [Base de données relationnelle](#base-de-données-relationnelle).
+
+**Des protections de sécurité intégrées**, qui couvrent une grande partie des risques relevés pendant l'analyse :
+- jeton CSRF sur les formulaires ;
+- hachage des mots de passe ;
+- régénération de l'identifiant de session à la connexion (contre la fixation de session) ;
+- contrôle d'accès par rôle, et *voters* pour vérifier qu'un utilisateur n'accède qu'à ses propres commandes ;
+- limitation des tentatives de connexion ;
+- échappement automatique des données affichées par Twig (contre le XSS) ;
+- validation des formulaires, dont la règle de mot de passe de l'expression du besoin (p. 5).
+
+Le framework ne connaît pas les règles de gestion pour autant. Restent à ma charge : le recalcul du prix par le serveur, les changements de statut autorisés, les messages identiques contre l'énumération de comptes et le contrôle des fichiers envoyés. Les mécanismes de sécurité sont détaillés dans `06-securite.md`.
+
+### Version
+
+| Version | Maintenance | Décision |
+|---|---|---|
+| **7.4 LTS** | Corrections jusqu'en novembre 2028, sécurité jusqu'en novembre 2029 | **Retenue** |
+| 8.1 | Fin de maintenance le 31 janvier 2027, avant la fin du projet | Écartée |
+| 8.2 | Sortie en novembre 2026, maintenue jusqu'en juillet 2027 | Écartée |
+
+Une version LTS reste maintenue bien après la livraison au client. Symfony 7.4 demande au minimum PHP 8.2 ; l'application tourne en **PHP 8.4**, la version proposée par l'hébergeur.
+
+### Alternatives écartées
+
+| Alternative | Raison |
+|---|---|
+| PHP natif avec PDO (stack donnée en exemple) | Chaque ligne serait maîtrisée, mais tout serait à construire : routage, organisation du code, authentification, jetons CSRF, validation, limitation des tentatives, envoi de mails, échappement manuel de chaque donnée affichée. Avec 44 cas d'utilisation et un travail surtout le week-end, cela représentait plusieurs semaines de plus et un risque réel de faille par oubli d'un contrôle. |
+| Node.js | Un seul langage côté navigateur et côté serveur, mais je ne l'ai pratiqué que très brièvement : l'apprendre dans le délai du projet était trop risqué. |
 ## Base de données relationnelle
 ## Base de données non relationnelle
 ## Déploiement
