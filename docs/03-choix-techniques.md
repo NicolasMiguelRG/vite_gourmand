@@ -134,5 +134,38 @@ L'expression du besoin demande un fichier SQL de création de la base et d'inté
 | MySQL 8.4 LTS ou 9.7 LTS | Mon premier choix, mais non proposé par l'hébergeur retenu. Le garder aurait imposé un hébergeur deux fois plus cher ou un serveur à administrer moi-même. |
 | MariaDB 11.4 LTS | Maintenue plus longtemps (mai 2029), mais plus ancienne : la 11.8 est la dernière LTS proposée par l'hébergeur et évite une migration ultérieure. |
 | PostgreSQL | Plus strict et plus riche en fonctionnalités avancées, inutiles pour ce projet. Je ne l'ai pratiqué que très brièvement, alors que je maîtrise mieux MySQL, dont MariaDB est issu. |
+
 ## Base de données non relationnelle
+
+### MongoDB
+
+La base de données non relationnelle est **MongoDB**, une base orientée documents. Elle sert uniquement aux statistiques de l'administrateur : nombre de commandes par menu et chiffre d'affaires (stories 37 et 38).
+
+Ce type de base correspond aux données retenues lors de la conception : **un document par commande**, qui contient déjà tout ce qu'une statistique affiche (menu, date de prestation, statut, montants). Les calculs se font sans jointure, avec les agrégations de MongoDB (compter, additionner, filtrer par menu et par période). La base relationnelle reste la seule source de vérité ; la base non relationnelle n'en est qu'une copie destinée à la lecture, sans aucune donnée personnelle. Le détail des données stockées et leur justification se trouvent dans [`05-conception.md`](05-conception.md#données-de-la-base-non-relationnelle).
+
+### Accès depuis Symfony : la bibliothèque officielle
+
+L'application accède à MongoDB avec la **bibliothèque PHP officielle** (`mongodb/mongodb`), et non avec Doctrine MongoDB ODM, l'équivalent de l'ORM pour MongoDB. J'écris ainsi moi-même les requêtes et les agrégations, comme pour le SQL de la base relationnelle.
+
+Cette bibliothèque s'appuie sur l'extension PHP `mongodb`, qui doit être installée sur le serveur. Je l'ai compilée et testée chez l'hébergeur avant de valider ce choix : elle fonctionne avec PHP 8.4.
+
+### Hébergement : MongoDB Atlas
+
+En préproduction et en production, la base est hébergée sur **MongoDB Atlas**, le service en ligne de MongoDB, avec son offre gratuite (512 Mo), largement suffisante pour des documents de statistiques. En local, MongoDB tourne dans un conteneur Docker.
+
+MongoDB est une société américaine, ce qui fait exception à mon critère de prestataires français. Ce choix reste acceptable pour deux raisons :
+- **aucune donnée personnelle** n'est copiée dans cette base (ni nom, ni adresse, ni coordonnées) ;
+- le cluster est créé dans une **région européenne**.
+
+L'offre gratuite ne comprend ni sauvegarde ni garantie de disponibilité. Ce n'est pas bloquant : les documents sont une copie et peuvent être reconstitués à tout moment depuis la base relationnelle. Si le besoin grandit, il suffira de passer à une offre payante d'Atlas, sans changer le code.
+
+### Alternatives écartées
+
+| Alternative | Raison |
+|---|---|
+| Doctrine MongoDB ODM | Plus rapide à mettre en place, mais masque les requêtes. Je préfère écrire les agrégations moi-même pour maîtriser l'accès aux données. |
+| Redis | Base clé-valeur en mémoire, faite pour le cache et les compteurs : mal adaptée aux filtres par menu et par période. |
+| CouchDB | Également orientée documents, mais peu répandue et peu documentée avec Symfony. |
+| Firestore (Google) | Dépendance à Google Cloud et peu utilisé avec PHP. |
+| Module MongoDB d'un hébergeur | Celui étudié (Clever Cloud) proposait une version ancienne de MongoDB (4.0) ; Atlas fournit une version à jour. |
 ## Déploiement
