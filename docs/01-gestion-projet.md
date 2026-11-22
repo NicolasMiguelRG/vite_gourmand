@@ -1,42 +1,44 @@
-# Gestion de projet 
+# Gestion de projet
 
-## Méthode 
+## Méthode
 
 Le projet est mené seul, avec un temps disponible irrégulier.
-Des sprints de durée fixe n'étaient donc pas adaptés. 
+Des sprints de durée fixe n'étaient donc pas adaptés.
 J'utilise un modèle hybride, le **Scrumban** :
-- **de Scrum** : un backlog priorisé, des jalons et une rétrospective à la fin de chaque jalon ;
-- **de Kanban** : un flux tiré (je prends la carte suivante en haut du Backlog quand j'ai du temps) et une limite de travail en cours. 
 
-## Outil : GitHub Projects 
+- **de Scrum** : un backlog priorisé, des jalons et une rétrospective à la fin de chaque jalon ;
+- **de Kanban** : un flux tiré (je prends la carte suivante en haut du Backlog quand j'ai du temps) et une limite de travail en cours.
+
+## Outil : GitHub Projects
 
 Tableau de suivi : [Vite & Gourmand - ECF](https://github.com/users/NicolasMiguelRG/projects/2/views/1)
 
-J'ai choisi GitHub Projects car les cartes sont des issues du dépôt : chaque carte est reliée à sa branche, à ses commits et à sa pull request, ce qui assure la traçabilité du travail. 
+J'ai choisi GitHub Projects car les cartes sont des issues du dépôt : chaque carte est reliée à sa branche, à ses commits et à sa pull request, ce qui assure la traçabilité du travail.
 
-| Colonne | Rôle |
-|---|---|
-| Backlog | Toutes les cartes à faire, triées par priorité |
-| En cours | Cartes en cours de construction (2 maximum) |
-| En test | Cartes construites, en cours de vérification |
-| Terminé | Cartes testées et fusionnées dans `dev` |
+| Colonne  | Rôle                                           |
+| -------- | ---------------------------------------------- |
+| Backlog  | Toutes les cartes à faire, triées par priorité |
+| En cours | Cartes en cours de construction (2 maximum)    |
+| En test  | Cartes construites, en cours de vérification   |
+| Terminé  | Cartes testées et fusionnées dans `dev`        |
 
-Champs personnalisés : 
+Champs personnalisés :
+
 - **Priorité** : P0 (priorité absolue), P1 (important), P2 (bonus)
 - **Jalon** : J0 à J5
 - **Catégorie** : Conception, Fonctionnalité, Documentation, DevOps, Bug
 - **Taille** : S (moins de 2h), M (une demi-journée), L (une journée ou plus, à découper si possible)
 
 Automatisations :
+
 - une issue ajoutée au projet arrive dans le Backlog ;
 - l'ouverture d'une pull request liée à une issue (mot-clé « Closes #X ») fait passer la carte en En test ;
 - la fusion de la pull request dans `dev` ferme l'issue et fait passer la carte en Terminé ;
 - une carte déplacée manuellement en Terminé ferme automatiquement son issue.
 
-
 ![Historique complet de l'issue #4](images/gestion-projet/gestion-projet-cycle-complet-issue-4.png)
 
-*Historique de l'issue #4 : passage automatique en En test à l'ouverture de la pull request #7, puis fermeture et passage en Terminé à sa fusion.*
+_Historique de l'issue #4 : passage automatique en En test à l'ouverture de la pull request #7, puis fermeture et passage en Terminé à sa fusion._
 
 ### User stories : les cartes font référence
 
@@ -48,33 +50,34 @@ Une même information écrite à deux endroits finit toujours par diverger ; en 
 La documentation n'en contient qu'un tableau récapitulatif, dans le [cahier des charges](02-cahier-des-charges.md#user-stories).
 
 Pour que toutes les cartes aient la même structure, j'utilise un modèle de carte (`.github/ISSUE_TEMPLATE/user-story.md`) :
+
 - le titre commence par « US · », pour distinguer les user stories des autres cartes (tâches techniques, documentation) ;
 - les critères communs à toutes les user stories (affichage sur ordinateur et mobile, accessibilité, contrôles côté serveur, tests, documentation) y sont écrits une seule fois.
 
 Une vue « Table » du tableau, filtrée sur le jalon J4, affiche toutes les user stories avec leur statut, leur priorité et leur taille.
 
+## Jalons
 
-## Jalons 
+| Jalon                     | Contenu                                                     | Date cible  | Date réelle |
+| ------------------------- | ----------------------------------------------------------- | ----------- | ----------- |
+| J0 - Mise en place        | Dépôt, branches, tableau, documentation                     | 8 novembre  | 31 octobre  |
+| J1 - Analyse & conception | Cahier des charges, UML, MCD, choix techniques              | 15 novembre | 14 novembre |
+| J2 - Maquettes & charte   | Wireframes, mockups, palette, police                        | 22 novembre | 22 novembre |
+| J3 - Socle technique      | Environnement, bases de données, CI/CD, premier déploiement | 29 novembre |             |
+| J4 - Fonctionnalités      | Développement par fonctionnalité complète                   | 27 décembre |             |
+| J5 - Finalisation         | RGAA, sécurité, tests, manuel, charte PDF, copie            | 1er janvier |             |
 
-| Jalon | Contenu | Date cible | Date réelle |
-|---|---|---|---|
-| J0 - Mise en place | Dépôt, branches, tableau, documentation | 8 novembre | 31 octobre |
-| J1 - Analyse & conception | Cahier des charges, UML, MCD, choix techniques | 15 novembre | 14 novembre |
-| J2 - Maquettes & charte | Wireframes, mockups, palette, police | 22 novembre | |
-| J3 - Socle technique | Environnement, bases de données, CI/CD, premier déploiement | 29 novembre | |
-| J4 - Fonctionnalités | Développement par fonctionnalité complète | 20 décembre | |
-| J5 - Finalisation | RGAA, sécurité, tests, manuel, charte PDF, copie | 31 décembre | |
-
-## Règle de passage d'un jalon à l'autre 
+## Règle de passage d'un jalon à l'autre
 
 Je considère un jalon terminé quand toutes ses cartes P0 sont terminées.
-Les cartes P1 et P2 restantes sont reportées dans le Backlog. 
+Les cartes P1 et P2 restantes sont reportées dans le Backlog.
 À l'exception du cas où une carte du jalon suivant dépend de l'une d'elles : dans ce cas, je la traite en priorité.
 Ces dépendances sont notées dans la description des cartes sous la forme « Dépend de : #X ».
 
-## Definition of Done 
+## Definition of Done
 
-Une carte passe en Terminé lorsque : 
+Une carte passe en Terminé lorsque :
+
 - le code est testé ;
 - la pull request est fusionnée dans `dev` ;
 - les règles d'accessibilité de base sont respectées ;
@@ -95,14 +98,13 @@ qui cible la branche par défaut.
 
 ![Protection de la branche main](images/gestion-projet/gestion-projet-protection-main.png)
 
-*Tentative de modification directe de `main` : GitHub impose de passer par une nouvelle branche et une pull request.*
+_Tentative de modification directe de `main` : GitHub impose de passer par une nouvelle branche et une pull request._
 
+Convention de nommage des branches :
 
-Convention de nommage des branches : 
 - `feature/...` : fonctionnalité
-- `docs/...` : documentation 
+- `docs/...` : documentation
 - `fix/...` : correction de bug
-
 
 ## Rétrospectives
 
@@ -158,15 +160,15 @@ c'est mon point faible, et ce jalon en demandait beaucoup.
 
 **Cartes ajoutées pendant le jalon**
 
-| Carte | Jalon | Justification |
-|---|---|---|
-| #20 Mettre à jour la documentation de conception après les user stories | J1 · P0 | Les user stories ont fait apparaître des règles et des cas absents du cahier des charges et des diagrammes. Il fallait les mettre à jour avant le MCD, pour le construire à partir d'une source d'informations sûre. |
-| #17 Documenter la structure du dépôt | J3 · P2 | Les images de la documentation ont été réorganisées en un sous-dossier par fichier pendant la #11 : cette convention doit être documentée. |
-| #22 à #24 Tâches techniques (gabarit commun, journalisation des erreurs, base NoSQL) | J3 · P0 | Nécessaires à plusieurs user stories, mais ce ne sont pas des fonctionnalités visibles par l'utilisateur. |
-| #25 à #65 User stories | J4 | Résultat prévu de la #12 : une carte par user story. |
-| #68 Imprimer le bon de livraison d'une commande | J4 · P2 | Idée apparue pendant le MCD, pour que le livreur dispose des coordonnées du client. |
-| #72 et #73 Documentation de l'environnement et du déploiement | J3 · P0 | Documents exigés par l'énoncé, qui n'étaient pas encore prévus dans le Backlog. |
-| #74 Rédiger la rétrospective du J1 | J1 · P1 | Bilan du jalon, comme la #8 pour le J0. |
+| Carte                                                                                | Jalon   | Justification                                                                                                                                                                                                        |
+| ------------------------------------------------------------------------------------ | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| #20 Mettre à jour la documentation de conception après les user stories              | J1 · P0 | Les user stories ont fait apparaître des règles et des cas absents du cahier des charges et des diagrammes. Il fallait les mettre à jour avant le MCD, pour le construire à partir d'une source d'informations sûre. |
+| #17 Documenter la structure du dépôt                                                 | J3 · P2 | Les images de la documentation ont été réorganisées en un sous-dossier par fichier pendant la #11 : cette convention doit être documentée.                                                                           |
+| #22 à #24 Tâches techniques (gabarit commun, journalisation des erreurs, base NoSQL) | J3 · P0 | Nécessaires à plusieurs user stories, mais ce ne sont pas des fonctionnalités visibles par l'utilisateur.                                                                                                            |
+| #25 à #65 User stories                                                               | J4      | Résultat prévu de la #12 : une carte par user story.                                                                                                                                                                 |
+| #68 Imprimer le bon de livraison d'une commande                                      | J4 · P2 | Idée apparue pendant le MCD, pour que le livreur dispose des coordonnées du client.                                                                                                                                  |
+| #72 et #73 Documentation de l'environnement et du déploiement                        | J3 · P0 | Documents exigés par l'énoncé, qui n'étaient pas encore prévus dans le Backlog.                                                                                                                                      |
+| #74 Rédiger la rétrospective du J1                                                   | J1 · P1 | Bilan du jalon, comme la #8 pour le J0.                                                                                                                                                                              |
 
 **Pour la suite**
 
@@ -175,6 +177,56 @@ disponible plus important que prévu, je ne compte pas sur elle pour la suite. S
 (maquettes et charte) et le J3 (socle technique) peuvent avancer en parallèle, car les maquettes
 ne bloquent pas l'installation technique. Je vérifierai le rythme réel à la rétrospective du J2
 et j'ajusterai le planning si nécessaire.
+
+### J2 – Maquettes & charte (cible : 22 novembre · réel : 22 novembre)
+
+**Ce qui a fonctionné**
+
+Le jalon a été livré à la date cible. L'enchaînement des cartes défini lors de sa
+préparation a été respecté : la charte graphique et les wireframes, indépendants l'un
+de l'autre, ont été réalisés en premier ; les mockups, qui s'appuient sur les deux, ont
+suivi (mobiles avant bureau, selon l'approche _mobile first_) ; la charte rédigée et
+exportée en PDF a clôturé le jalon.
+
+**Difficultés**
+
+La conception graphique n'est pas mon domaine de prédilection : ce jalon m'a demandé
+plus d'efforts et de temps que les autres. Le travail était long (charte, wireframes et
+mockups pour trois écrans en version mobile et bureau), alors que mon temps disponible
+était réduit : il s'est concentré sur deux week-ends (14-15 novembre et 22 novembre).
+La version gratuite de Figma limite aussi un fichier à trois pages. J'ai donc regroupé
+la charte, les wireframes et les mockups dans un seul fichier, une page pour chacun,
+et séparé leurs différentes parties par des sections.
+
+**Ajustements**
+
+- J'ai ajouté un composant « Encadré/Information » à la planche de la charte, car les
+  mockups utilisaient un encadré vert sauge pour les informations (réduction, livraison)
+  qui n'existait pas encore parmi les composants.
+- J'ai fixé une convention de nommage des images (minuscules, tirets, sans accent), car
+  les noms automatiques de Figma (espaces, accents, majuscules) gênent les liens de la
+  documentation. Les images des cartes précédentes ont été renommées.
+
+**Cartes ajoutées pendant le jalon**
+
+| Carte                              | Jalon   | Justification                            |
+| ---------------------------------- | ------- | ---------------------------------------- |
+| #86 Rédiger la rétrospective du J2 | J2 · P1 | Bilan du jalon, comme la #74 pour le J1. |
+
+**Pour la suite**
+
+Le J2 a confirmé que mon temps disponible reste limité : quelques après-midi et les
+week-ends, soit deux week-ends pour les cinq cartes de ce jalon. En revanche, je serai en
+congés du 21 décembre au 3 janvier, date limite du rendu. Avec les dates actuelles, cette
+période tomberait entièrement dans le J5, alors que le J4 (42 user stories) est le jalon
+le plus chargé. J'ajuste donc le planning :
+
+- le J4 passe du 20 au 27 décembre, pour lui consacrer ma première semaine de congés ;
+- le J5 passe du 31 décembre au 1er janvier, ce qui garde deux jours de marge avant le rendu ;
+- le J3 reste au 29 novembre : je le réévaluerai à sa rétrospective.
+
+Si le temps manque au J4, les cartes P1 et P2 seront reportées en premier, conformément
+à la règle de passage d'un jalon à l'autre.
 
 ## Sources
 
