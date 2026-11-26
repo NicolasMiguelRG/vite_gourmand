@@ -1,3 +1,4 @@
 {
-  "markdown-pdf.styles": [".vscode/markdown-pdf.css"]
+  "markdown-pdf.styles": [".vscode/markdown-pdf.css"],
+  "intelephense.environment.phpVersion": "8.4.28"
 }
