@@ -428,6 +428,102 @@ Certaines règles ne peuvent pas être imposées par les cardinalités. Elles se
  
 Les évolutions suivantes ne sont pas demandées et ne sont pas modélisées : disponibilité d'un menu par période, historique des modifications des horaires, détail des valeurs avant et après une modification de commande, historique des désactivations de comptes employés, livraison hors de France.
 
+## Modèle logique de données
+
+### Schéma relationnel
+
+Le modèle logique traduit le modèle conceptuel en tables, sans dépendre encore d'un logiciel de base de données.
+
+**Lecture** : le premier attribut de chaque table est sa clé primaire ; `#` désigne une clé étrangère ; dans une table d'association, la clé primaire est formée des deux clés étrangères. Les tables sont rangées dans l'ordre de création : une table référencée est toujours créée avant celles qui pointent vers elle.
+
+```
+role (role_id, libelle)
+theme (theme_id, libelle)
+regime (regime_id, libelle)
+allergene (allergene_id, libelle)
+utilisateur (utilisateur_id, nom, prenom, email, telephone, adresse, code_postal, ville, mot_de_passe_hache, date_confirmation, mot_de_passe_provisoire, actif, #role_id)
+jeton (jeton_id, code, type, date_expiration, date_utilisation, #utilisateur_id)
+menu (menu_id, titre, description, conditions, nombre_personne_minimum, prix_minimum, stock, statut, delai_minimum_jours, description_materiel, #theme_id)
+photo (photo_id, chemin_fichier, texte_alternatif, est_principale, #menu_id)
+plat (plat_id, nom, categorie, chemin_photo, texte_alternatif_photo, description_materiel)
+propose (#menu_id, #plat_id)
+adapte (#menu_id, #regime_id)
+contient (#plat_id, #allergene_id)
+commande (commande_id, numero_commande, date_prestation, heure_livraison, nombre_personne, adresse_prestation, code_postal_prestation, ville_prestation, prix_menu, montant_reduction, prix_livraison, description_materiel_menu, #utilisateur_id, #menu_id)
+plat_commande (plat_commande_id, nom, categorie, description_materiel, #commande_id)
+contient_fige (#plat_commande_id, #allergene_id)
+changement_statut (changement_statut_id, statut, date_heure, #commande_id, #utilisateur_id)
+modification (modification_id, date_heure, #commande_id, #utilisateur_id)
+contact (contact_id, objet, mode, motif, date_heure, accord_client, #utilisateur_id, #commande_id)
+avis (avis_id, note, commentaire, date_depot, #commande_id UNIQUE)
+decision_moderation (decision_moderation_id, decision, motif, date_heure, #utilisateur_id, #avis_id)
+horaire (horaire_id, jour, ouverture_1, fermeture_1, ouverture_2, fermeture_2)
+```
+
+### Règles de traduction
+
+Le passage du modèle conceptuel au modèle logique suit trois règles.
+
+**1. Chaque entité devient une table**, et son identifiant devient la clé primaire. Les 17 entités du modèle conceptuel donnent 17 tables.
+
+**2. Une association dont un côté a un maximum de 1 devient une clé étrangère.** Celle-ci est placée dans la table de l'entité qui porte la cardinalité (0,1) ou (1,1) : la table « enfant », qui pointe vers sa table « parent ». Par exemple, pour `UTILISATEUR (0,N) — passe — (1,1) COMMANDE`, une commande n'a qu'un seul client : elle peut donc conserver son identifiant (`#utilisateur_id`). À l'inverse, un utilisateur peut avoir plusieurs commandes, et une case ne contient qu'une seule valeur. L'association disparaît : la clé étrangère la remplace.
+
+Le minimum indique si la clé étrangère est obligatoire :
+
+- **(1,1)** : elle est toujours remplie. Une commande a toujours un client.
+- **(0,1)** : elle peut rester vide. C'est le cas de `#utilisateur_id` dans `changement_statut`, car le statut « en attente » est créé automatiquement et une annulation par le client n'implique aucun employé, et dans `modification`, quand le client modifie lui-même sa commande.
+
+**3. Une association dont les deux côtés ont un maximum de N devient une table.** Ni l'une ni l'autre des deux entités ne peut conserver la clé de l'autre : un menu contient plusieurs plats, et un plat peut appartenir à plusieurs menus. La nouvelle table contient les deux clés étrangères, qui forment ensemble sa clé primaire : une même paire ne peut donc pas être enregistrée deux fois (un plat ne figure qu'une fois dans un menu donné). Quatre associations sont concernées : `propose`, `adapte`, `contient` et `contient_fige`.
+
+**Cas particulier : un maximum de 1 des deux côtés.** Pour `COMMANDE (0,1) — evalue — (1,1) AVIS`, la clé étrangère est placée dans `avis` : un avis porte toujours sur une commande, la clé est donc toujours remplie, alors que dans `commande` elle resterait vide pour toutes les commandes sans avis. Une contrainte d'unicité sur `#commande_id` conserve le maximum de 1 : une commande ne peut recevoir qu'un seul avis (RG-26).
+
+Le modèle logique compte ainsi **21 tables** : 17 issues des entités et 4 issues des associations.
+
+## Modèle physique de données
+
+Le modèle physique adapte le modèle logique à **MariaDB 11.8**, la version utilisée en local et en ligne (voir [`03-choix-techniques.md`](03-choix-techniques.md)). Il est écrit à la main dans le fichier [`sql/01-creation.sql`](../sql/01-creation.sql), qui crée les 21 tables dans l'ordre du schéma relationnel : une table est toujours créée après celles qu'elle référence.
+
+### Conversion des types
+
+Chaque type du dictionnaire des données est traduit selon une règle unique :
+
+| Dictionnaire | MariaDB | Exemple |
+|---|---|---|
+| AN avec une taille | `VARCHAR(taille)` | `nom VARCHAR(50)` |
+| AN texte long | `TEXT` | `description TEXT` |
+| N entier | `INT` | `stock INT` |
+| N avec 2 décimales | `DECIMAL(10,2)` | `prix_menu DECIMAL(10,2)` |
+| D | `DATE` | `date_prestation DATE` |
+| H | `TIME` | `heure_livraison TIME` |
+| DH | `DATETIME` | `date_depot DATETIME` |
+| B | `BOOLEAN` | `actif BOOLEAN` |
+
+- **`VARCHAR`** n'occupe que la longueur réellement saisie ; la taille reprend celle du dictionnaire. Les empreintes (`mot_de_passe_hache`, `code` du jeton) ont 255 caractères : leur longueur dépend de l'algorithme de hachage, et cette marge permet d'en changer sans modifier la base.
+- **`DECIMAL(10,2)`** stocke les montants de façon exacte : 10 chiffres au total, dont 2 après la virgule, soit 99 999 999,99 € au maximum. `FLOAT` est écarté : il stocke une valeur approchée, et ces écarts finiraient par fausser les totaux et le chiffre d'affaires.
+- **`DATETIME`** est préféré à `TIMESTAMP`, limité à l'année 2038 et converti selon le fuseau horaire du serveur : `DATETIME` enregistre exactement la valeur donnée.
+- **`BOOLEAN`** est enregistré par MariaDB comme un petit entier : 0 pour non, 1 pour oui.
+
+### Moteur et encodage
+
+Toutes les tables utilisent le moteur **InnoDB**, qui vérifie les clés étrangères et gère les transactions, nécessaires à l'enregistrement d'une commande en une seule opération (voir le [diagramme de séquence](#diagramme-de-séquence)). Il est indiqué sur chaque table, y compris celles qui n'ont pas de clé étrangère : une clé étrangère n'est possible que si la table référencée utilise elle aussi InnoDB.
+
+L'encodage **`utf8mb4`** accepte tous les caractères (accents, symbole €, émojis). L'encodage nommé `utf8` dans MariaDB est une version limitée, qui refuse par exemple les émojis : un commentaire d'avis qui en contient ferait échouer l'enregistrement.
+
+### Contraintes
+
+| Contrainte | Utilisation |
+|---|---|
+| `PRIMARY KEY` + `AUTO_INCREMENT` | Identifiant numéroté automatiquement dans chaque table issue d'une entité |
+| `PRIMARY KEY` sur deux colonnes | Tables d'association : une même paire ne peut pas être enregistrée deux fois |
+| `FOREIGN KEY` | Une clé étrangère ne peut désigner qu'une ligne existante. Une ligne référencée ne peut pas être supprimée : les menus et les comptes sont archivés ou désactivés, jamais supprimés |
+| `NOT NULL` | Données obligatoires du dictionnaire, et clés étrangères issues d'une cardinalité (1,1). Les clés issues d'une cardinalité (0,1) restent facultatives |
+| `UNIQUE` | `email` (RG-08), `numero_commande`, libellés des rôles, thèmes, régimes et allergènes, `jour` des horaires, `commande_id` de `avis` (un avis par commande, RG-26) |
+| `DEFAULT` | Valeur à la création : compte actif, mot de passe non provisoire, menu en brouillon, photo non principale, réduction et livraison à 0 |
+
+### Règles laissées à l'application
+
+Les listes de valeurs (catégorie d'un plat, statut d'un menu ou d'une commande, décision de modération…) et les autres règles métier ne sont pas imposées par des contraintes `CHECK` dans la base. La base garantit la **structure** des données : types, champs obligatoires, unicité, liens entre les tables. L'application garantit les **règles métier**, vérifiées par le serveur à chaque enregistrement. Elles sont ainsi regroupées à un seul endroit, comme annoncé dans les [règles non exprimables par le modèle](#règles-non-exprimables-par-le-modèle).
+
 ## Données de la base non relationnelle
 
 ### Données stockées
