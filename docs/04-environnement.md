@@ -175,7 +175,23 @@ docker compose exec -u www-data php composer install
 
 Les commandes PHP se lancent avec `-u www-data`, pour que les fichiers créés (`vendor/`, `var/`) appartiennent au même compte qu'Apache.
 
-### 5. Vérifier l'installation
+### 5. Créer les tables de la base de données
+
+Le fichier [`sql/01-creation.sql`](../sql/01-creation.sql) crée les tables de la base relationnelle (voir [le modèle physique de données](05-conception.md#modèle-physique-de-données)) :
+
+```bash
+docker compose exec -T database mariadb -u app -papp_local vite_gourmand < sql/01-creation.sql
+```
+
+Aucun message ne s'affiche si la création réussit. Le fichier s'exécute sur une base vide : lancé une seconde fois, il s'arrête, car les tables existent déjà.
+
+Pour vérifier que les 21 tables ont été créées :
+
+```bash
+docker compose exec database mariadb -u app -papp_local vite_gourmand -e "SHOW TABLES;"
+```
+
+### 6. Vérifier l'installation
 
 | Vérification | Commande ou adresse | Résultat attendu |
 |---|---|---|
