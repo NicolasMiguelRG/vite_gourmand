@@ -175,21 +175,42 @@ docker compose exec -u www-data php composer install
 
 Les commandes PHP se lancent avec `-u www-data`, pour que les fichiers créés (`vendor/`, `var/`) appartiennent au même compte qu'Apache.
 
-### 5. Créer les tables de la base de données
+### 5. Créer et remplir la base de données
 
-Le fichier [`sql/01-creation.sql`](../sql/01-creation.sql) crée les tables de la base relationnelle (voir [le modèle physique de données](05-conception.md#modèle-physique-de-données)) :
+Deux fichiers SQL, écrits à la main, construisent la base relationnelle (voir [le modèle physique de données](05-conception.md#modèle-physique-de-données)) :
+
+| Fichier | Rôle |
+|---|---|
+| [`sql/01-creation.sql`](../sql/01-creation.sql) | Crée les 21 tables |
+| [`sql/02-insertion.sql`](../sql/02-insertion.sql) | Insère les données de démonstration : listes de référence (rôles, thèmes, régimes, 14 allergènes, horaires), menus et plats, un compte de test pour chaque rôle, commandes à différents statuts et avis |
+
+Les lancer dans cet ordre :
 
 ```bash
 docker compose exec -T database mariadb -u app -papp_local vite_gourmand < sql/01-creation.sql
+docker compose exec -T database mariadb -u app -papp_local vite_gourmand < sql/02-insertion.sql
 ```
 
-Aucun message ne s'affiche si la création réussit. Le fichier s'exécute sur une base vide : lancé une seconde fois, il s'arrête, car les tables existent déjà.
-
-Pour vérifier que les 21 tables ont été créées :
+Aucun message ne s'affiche si tout réussit. Pour vérifier que les 21 tables existent et que les données sont présentes :
 
 ```bash
 docker compose exec database mariadb -u app -papp_local vite_gourmand -e "SHOW TABLES;"
+docker compose exec database mariadb -u app -papp_local vite_gourmand -e "SELECT prenom, email FROM utilisateur;"
 ```
+
+Les mots de passe des comptes de démonstration ne sont jamais écrits en clair dans le fichier : il ne contient que leur empreinte, calculée par Symfony (`php bin/console security:hash-password`). Les adresses mail utilisent le domaine `example.com`, réservé aux exemples : aucun mail ne peut partir vers une vraie personne. Les comptes et leurs mots de passe sont présentés dans le [README](../README.md).
+
+#### Repartir d'une base vide
+
+Les deux fichiers sont prévus pour une base vide. Relancés sur une base déjà remplie, ils s'arrêtent à la première table qui existe déjà ou à la première donnée en double. Pour reconstruire la base, par exemple après avoir modifié un fichier SQL ou pour retrouver les données de démonstration d'origine, supprimer la base, la recréer vide, puis relancer les deux fichiers :
+
+```bash
+docker compose exec -T database mariadb -u app -papp_local -e "DROP DATABASE vite_gourmand; CREATE DATABASE vite_gourmand;"
+docker compose exec -T database mariadb -u app -papp_local vite_gourmand < sql/01-creation.sql
+docker compose exec -T database mariadb -u app -papp_local vite_gourmand < sql/02-insertion.sql
+```
+
+Cette opération efface toutes les données de la base relationnelle locale. Elle ne touche ni la base MongoDB ni le compte MariaDB `app`, qui appartient au serveur et est défini dans `compose.yaml`. Elle ne s'utilise qu'en local.
 
 ### 6. Vérifier l'installation
 

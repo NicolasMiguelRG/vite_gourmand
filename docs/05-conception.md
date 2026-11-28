@@ -195,7 +195,7 @@ Les numéros de téléphone et les codes postaux sont de type AN : on ne fait au
 | Code      | Signification       | Type | Taille | Valeurs possibles / contrainte         | Source              |
 | --------- | ------------------- | ---- | ------ | -------------------------------------- | ------------------- |
 | `role_id` | Identifiant du rôle | N    | —      | Unique, attribué automatiquement       | —                   |
-| `libelle` | Nom du rôle         | AN   | 20     | utilisateur / employé / administrateur | RG-09, RG-10, RG-12 |
+| `libelle` | Nom du rôle         | AN   | 20     | ROLE_UTILISATEUR / ROLE_EMPLOYE / ROLE_ADMINISTRATEUR | RG-09, RG-10, RG-12 |
 
 **menu**
 
@@ -217,7 +217,7 @@ Les numéros de téléphone et les codes postaux sont de type AN : on ne fait au
 | Code       | Signification        | Type | Taille | Valeurs possibles / contrainte                          | Source          |
 | ---------- | -------------------- | ---- | ------ | ------------------------------------------------------- | --------------- |
 | `theme_id` | Identifiant du thème | N    | —      | Unique, attribué automatiquement                        | —               |
-| `libelle`  | Nom du thème         | AN   | 50     | Unique ; au départ : Noël, Pâques, classique, événement | RG-01, story 39 |
+| `libelle`  | Nom du thème         | AN   | 50     | Unique ; au départ : Noël, Pâques, Classique, Événement | RG-01, story 39 |
 
 **regime**
 
